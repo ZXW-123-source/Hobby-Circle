@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hobby Circle — Home</title>
+  <style>
+  :root{--accent:#2b8cff;--bg:#f7f9fc;--card:#ffffff;--muted:#6b7280;--hero-position:center center;--hero-overlay:rgba(0,0,0,0.28);--hero-intro-left:28px;--hero-intro-bottom:28px}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,Segoe UI,Helvetica,Arial;background:var(--bg);color:#111}
+    header{background:linear-gradient(90deg,#fff 0%,rgba(255,255,255,0.8) 100%);padding:18px 28px;display:flex;align-items:center;gap:18px}
+    .logo{display:flex;align-items:center;gap:10px}
+    .logo img{height:48px;width:48px;object-fit:cover;border-radius:8px}
+    nav{margin-left:auto;display:flex;gap:14px;align-items:center}
+  nav a{color:var(--muted);text-decoration:none;font-weight:700;padding:8px 10px;border-radius:8px}
+  nav a:hover{color:var(--accent);background:rgba(43,140,255,0.06)}
+  nav a.active{color:#0b3a8a;background:rgba(43,140,255,0.12)}
+  /* default background (fallback) */
+  .hero{position:relative;display:flex;gap:28px;padding:40px 28px;align-items:center;height:100vh;min-height:600px;background-image:url('images/hero.jpg');background-size:cover !important;background-position:var(--hero-position) !important;background-repeat:no-repeat !important;color:var(--card);overflow:hidden}
+  /* responsive WebP backgrounds - create these files for best performance */
+  @media (min-width:1100px){
+    .hero{background-image: url('images/hero-large.webp'), url('images/hero.jpg')}
+  }
+  @media (min-width:701px) and (max-width:1099px){
+    /* prefer medium WebP but fall back to hero.jpg if missing */
+    .hero{background-image: url('images/hero-medium.webp'), url('images/hero.jpg')}
+  }
+  @media (max-width:700px){
+    /* prefer small WebP but fall back to hero.jpg if missing */
+    .hero{background-image: url('images/hero-small.webp'), url('images/hero.jpg'); background-position: center top}
+  }
+  /* lighter overlay so top doesn't appear too gray */
+  .hero::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.06),var(--hero-overlay));z-index:0;pointer-events:none}
+  .hero .hero-image{position:relative;z-index:1}
+  .hero .intro{position:absolute;left:var(--hero-intro-left);bottom:var(--hero-intro-bottom);z-index:1;max-width:640px;background:rgba(0,0,0,0.32);padding:18px;border-radius:12px;width:clamp(260px,40%,640px);color:#fff;transform:translateY(6px);opacity:0;transition:transform .6s var(--ease, cubic-bezier(.2,.8,.2,1)),opacity .6s}
+  .hero.loaded .intro{transform:none;opacity:1}
+  .hero h1{font-size:28px;margin:0 0 10px}
+  .hero p{margin:0 0 18px;color:var(--muted)}
+  /* ensure intro paragraph stays white on the semi-transparent block */
+  .hero .intro p{color:#fff}
+    .cta{background:var(--accent);color:#fff;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:700}
+  .hero .hero-image{flex:1;text-align:right}
+  /* 原内联 <img> 已移除；如果需要保留装饰性元素，可在此添加样式 */
+  .section{padding:18px 28px 48px}
+  /* cards: subtle hover + reveal on scroll */
+  .card{transition:transform .28s var(--ease, cubic-bezier(.2,.8,.2,1)),box-shadow .28s;transform:translateY(12px);opacity:0}
+  .card.inview{transform:none;opacity:1}
+  .card:hover{transform:translateY(0) scale(1.02);box-shadow:0 12px 30px rgba(16,24,40,0.12)}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px;margin-top:14px}
+    .card{background:var(--card);border-radius:12px;padding:12px;box-shadow:0 6px 18px rgba(16,24,40,0.04);overflow:hidden}
+  .card .meta{display:flex;gap:8px;align-items:center;margin-top:8px}
+  .card .badge{background:#eef4ff;color:var(--accent);padding:4px 8px;border-radius:999px;font-size:12px;font-weight:700}
+  .card .members{margin-left:auto;color:var(--muted);font-size:12px}
+  .card .actions{display:flex;gap:8px;align-items:center;margin-top:10px}
+  .card .actions button{background:none;border:1px solid transparent;padding:6px 8px;border-radius:8px;cursor:pointer;font-weight:700}
+  .card .actions button.icon{display:inline-flex;align-items:center;gap:6px;border:1px solid #eef4ff;background:#fff}
+  .card .actions button.icon.liked{color:#d23f3f;background:rgba(210,63,63,0.06);border-color:rgba(210,63,63,0.08)}
+  .card .actions .join{margin-left:auto;background:var(--accent);color:#fff;padding:6px 10px;border-radius:8px}
+  .meta .members-count{font-weight:700}
+    .card img{width:100%;height:140px;object-fit:cover;border-radius:8px}
+    .card h3{margin:10px 0 6px;font-size:16px}
+    .card p{margin:0;color:var(--muted);font-size:13px}
+    footer{padding:18px 28px;color:var(--muted);font-size:13px;border-top:1px solid #e6eef9}
+  @media (max-width:700px){
+    :root{--hero-position:center top;--hero-intro-left:16px;--hero-intro-bottom:20px}
+    .hero{flex-direction:column;padding:28px 16px;min-height:50vh}
+    .hero .hero-image{text-align:left}
+    /* 在非常窄的屏幕上将 .intro 恢复为文档流（避免遮挡内容或超出视口） */
+    @media (max-width:420px){
+      .hero .intro{position:static;width:auto;margin-top:12px}
+    }
+  }
+  /* respect reduced motion */
+  @media (prefers-reduced-motion: reduce){
+    .hero .intro,.card{transition:none!important}
+  }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+  <img src="images/logo.jpg" alt="Hobby Circle logo" onerror="this.style.display='none'">
+      <div>
+        <strong>Hobby Circle</strong><br>
+        <small style="color:var(--muted);font-weight:600">Connect over shared hobbies</small>
+      </div>
+    </div>
+    <nav>
+      <a class="active" href="index.html">Home</a>
+      <a href="circles.html">Circles</a>
+      <a href="feed.html">Feed</a>
+      <a href="signup.html">Sign Up</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="intro">
+        <h1>Find people who love what you love</h1>
+        <p>Create or join interest circles for photography, reading, sports and more. Share updates, images and connect.</p>
+        <a class="cta" href="#">Get Started</a>
+      </div>
+    <div class="hero-image" aria-hidden="true"></div>
+    </section>
+
+    <section class="section">
+      <h2>Popular Circles</h2>
+      <div class="grid">
+        <article class="card">
+          <img src="images/cityphotography.jpg" alt="Photography circle" onerror="this.style.display='none'">
+          <h3>Photography</h3>
+          <p>Share techniques, gear tips and your latest shots.</p>
+          <div class="meta"><span class="badge">Photography</span><span class="members"><span class="members-count">1.2k</span> members</span></div>
+          <div class="actions" data-id="photography">
+            <button class="icon btn-like" aria-pressed="false" data-likes="120">❤ <span class="count">120</span></button>
+            <button class="icon btn-comment" data-comments="8">💬 <span class="count">8</span></button>
+            <button class="join" data-members="1200">Join • <span class="members-count">1.2k</span></button>
+          </div>
+        </article>
+
+        <article class="card">
+          <img src="images/reading club.jpg" alt="Reading circle" onerror="this.style.display='none'">
+          <h3>Reading Club</h3>
+          <p>Book discussions, recommendations and meetups.</p>
+          <div class="meta"><span class="badge">Books</span><span class="members"><span class="members-count">860</span> members</span></div>
+          <div class="actions" data-id="reading">
+            <button class="icon btn-like" aria-pressed="false" data-likes="34">❤ <span class="count">34</span></button>
+            <button class="icon btn-comment" data-comments="12">💬 <span class="count">12</span></button>
+            <button class="join" data-members="860">Join • <span class="members-count">860</span></button>
+          </div>
+        </article>
+
+        <article class="card">
+          <img src="images/sports.jpg" alt="Sports circle" onerror="this.style.display='none'">
+          <h3>Sports & Fitness</h3>
+          <p>Find workout partners and local events.</p>
+          <div class="meta"><span class="badge">Fitness</span><span class="members"><span class="members-count">940</span> members</span></div>
+          <div class="actions" data-id="sports">
+            <button class="icon btn-like" aria-pressed="false" data-likes="58">❤ <span class="count">58</span></button>
+            <button class="icon btn-comment" data-comments="6">💬 <span class="count">6</span></button>
+            <button class="join" data-members="940">Join • <span class="members-count">940</span></button>
+          </div>
+        </article>
+
+        <article class="card">
+          <img src="images/art.jpg" alt="Arts circle" onerror="this.style.display='none'">
+          <h3>Arts & Crafts</h3>
+          <p>DIY projects, tutorials and inspiration.</p>
+          <div class="meta"><span class="badge">DIY</span><span class="members"><span class="members-count">720</span> members</span></div>
+          <div class="actions" data-id="art">
+            <button class="icon btn-like" aria-pressed="false" data-likes="22">❤ <span class="count">22</span></button>
+            <button class="icon btn-comment" data-comments="3">💬 <span class="count">3</span></button>
+            <button class="join" data-members="720">Join • <span class="members-count">720</span></button>
+          </div>
+        </article>
+        
+        <article class="card">
+          <img src="images/backery.jpg" alt="Bakery circle" onerror="this.style.display='none'">
+          <h3>Bakery</h3>
+          <p>Share recipes, baking tips and photos of your bakes.</p>
+          <div class="meta"><span class="badge">Food</span><span class="members"><span class="members-count">410</span> members</span></div>
+          <div class="actions" data-id="bakery">
+            <button class="icon btn-like" aria-pressed="false" data-likes="9">❤ <span class="count">9</span></button>
+            <button class="icon btn-comment" data-comments="1">💬 <span class="count">1</span></button>
+            <button class="join" data-members="410">Join • <span class="members-count">410</span></button>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © 2025 Obby Circle — Demo static homepage. If images don't appear, replace the filenames in this file with those in your `images/` folder.
+  </footer>
+  <script>
+    (function(){
+      const hero = document.querySelector('.hero');
+      const nextSection = document.querySelector('.section');
+      // run after load to trigger intro animation
+      document.addEventListener('DOMContentLoaded', ()=>{
+        requestAnimationFrame(()=> hero && hero.classList.add('loaded'));
+        // CTA smooth scroll to next section
+        const cta = document.querySelector('.cta');
+        if(cta && nextSection){
+          cta.addEventListener('click', function(e){ e.preventDefault(); nextSection.scrollIntoView({behavior:'smooth'}); });
+        }
+        // Parallax removed: avoid changing backgroundPosition which can clip or shift the image
+        // Reveal cards with IntersectionObserver
+        const cards = document.querySelectorAll('.card');
+        if('IntersectionObserver' in window){
+          const io = new IntersectionObserver((entries, obs)=>{
+            entries.forEach(entry=>{
+              if(entry.isIntersecting){ entry.target.classList.add('inview'); obs.unobserve(entry.target); }
+            });
+          }, {threshold: 0.12});
+          cards.forEach(c => io.observe(c));
+        } else {
+          cards.forEach(c => c.classList.add('inview'));
+        }
+
+        // Simple interactive handlers: like, comment, join
+        function formatNumber(n){
+          if(n>=1000) return (n/1000).toFixed(n>=10000?0:1)+'k';
+          return n+'';
+        }
+        document.querySelectorAll('.btn-like').forEach(btn=>{
+          btn.addEventListener('click', ()=>{
+            const countEl = btn.querySelector('.count');
+            let likes = parseInt(btn.getAttribute('data-likes')||'0',10);
+            const pressed = btn.classList.toggle('liked');
+            if(pressed){ likes += 1; btn.setAttribute('aria-pressed','true'); }
+            else { likes = Math.max(0, likes-1); btn.setAttribute('aria-pressed','false'); }
+            btn.setAttribute('data-likes', likes);
+            countEl.textContent = formatNumber(likes);
+          });
+        });
+        document.querySelectorAll('.btn-comment').forEach(btn=>{
+          btn.addEventListener('click', ()=>{
+            const countEl = btn.querySelector('.count');
+            let comments = parseInt(btn.getAttribute('data-comments')||'0',10);
+            const text = prompt('Add a comment (demo):');
+            if(text){ comments += 1; btn.setAttribute('data-comments', comments); countEl.textContent = comments; }
+          });
+        });
+        document.querySelectorAll('.join').forEach(btn=>{
+          btn.addEventListener('click', ()=>{
+            let members = parseInt(btn.getAttribute('data-members')||'0',10);
+            const joined = btn.classList.toggle('joined');
+            if(joined){ members += 1; btn.textContent = 'Joined • '+formatNumber(members); btn.style.background='#6fb0ff'; }
+            else { members = Math.max(0,members-1); btn.textContent = 'Join • '+formatNumber(members); btn.style.background='var(--accent)'; }
+            btn.setAttribute('data-members', members);
+            // also update meta members display in the card
+            const meta = btn.parentElement && btn.parentElement.previousElementSibling;
+            if(meta){ const mspan = btn.querySelector('.members-count'); /* if inside button */ }
+            const siblingMembers = btn.querySelector('.members-count');
+            // update any members-count elements within the card
+            const card = btn.closest('.card');
+            if(card){ card.querySelectorAll('.members-count').forEach(el=>{ el.textContent = formatNumber(members); }); }
+          });
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

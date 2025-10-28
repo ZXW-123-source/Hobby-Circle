@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hobby Circle — Feed</title>
+  <style>
+    :root{--accent:#2b8cff;--bg:#f7f9fc;--card:#ffffff;--muted:#6b7280}
+    body{margin:0;font-family:Inter,Segoe UI,Helvetica,Arial;background:var(--bg);color:#111}
+    header{background:linear-gradient(90deg,#fff 0%,rgba(255,255,255,0.8) 100%);padding:14px 22px;display:flex;align-items:center;gap:14px}
+    nav{margin-left:auto;display:flex;gap:12px}
+    main{padding:18px 22px}
+    .post{background:var(--card);padding:14px;border-radius:10px;box-shadow:0 6px 18px rgba(16,24,40,0.04);margin-bottom:14px}
+    .post img{max-width:100%;border-radius:8px;margin-top:8px}
+    .btn{background:var(--accent);color:#fff;padding:8px 12px;border-radius:8px;text-decoration:none}
+    .post-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+  margin-top: 12px;
+}
+.like-btn {
+  background: transparent;
+  color: var(--accent);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 16px;
+  padding: 4px;
+}
+.comment-count {
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.comment-item {
+  margin: 8px 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #f9f9f9;
+  transition: background-color 0.2s ease;
+}
+.comment-item:hover {
+  background: #f0f4ff;
+}
+.comment-user {
+  font-weight: bold;
+  color: var(--accent);
+  margin-right: 8px;
+}
+.comment-content {
+  color: #444;
+  line-height: 1.4;
+}
+.comments-toggle {
+  color: var(--accent);
+  cursor: pointer;
+  margin-top: 8px;
+  font-size: 14px;
+  user-select: none;
+}
+.comments-toggle:hover {
+  text-decoration: underline;
+}
+.like-btn:hover {
+  color: #1a6fe0;
+}
+.like-btn.liked {
+  color: #ff4757;
+}
+.comment-section {
+  margin-top: 12px;
+  width: 100%;
+}
+.comment-input {
+  width: calc(100% - 100px);
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+.comment-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(43, 140, 255, 0.1);
+}
+.comment-submit {
+  background: var(--accent);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-size: 14px;
+}
+.comment-submit:hover {
+  background: #1a6fe0;
+}
+.comment-submit:active {
+  transform: scale(0.98);
+}
+.comments-list {
+  margin-top: 12px;
+  padding: 12px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+  max-height: 300px;
+  overflow-y: auto;
+  position: relative;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) transparent;
+}
+.comments-list::-webkit-scrollbar {
+  width: 6px;
+}
+.comments-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.comments-list::-webkit-scrollbar-thumb {
+  background-color: var(--accent);
+  border-radius: 20px;
+}
+.scroll-to-bottom {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  background: var(--accent);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 100;
+  border: none;
+  outline: none;
+  font-weight: bold;
+}
+.scroll-to-bottom:hover {
+  background: #1a6fe0;
+  transform: translateY(-2px);
+}
+.scroll-to-bottom:active {
+  transform: translateY(0);
+}
+.comment-item {
+  margin: 8px 0;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: white;
+  border: 1px solid #eee;
+}
+.comments-toggle.active {
+  background: rgba(43, 140, 255, 0.2);
+  border-color: var(--accent);
+}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo"><img src="images/logo.jpg" alt="logo" style="height:36px"></div>
+    <strong>Hobby Circle</strong>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="circles.html">Circles</a>
+      <a class="active" href="feed.html">Feed</a>
+      <a href="signup.html">Sign Up</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Community Feed (demo)</h2>
+    <section class="post">
+      <strong>Alice</strong> <small style="color:var(--muted)">in Bakery · 2h</small>
+      <p>Just tried a new sourdough recipe — came out great!</p>
+      <img src="images/sourdough.jpg" alt="sourdough">
+      <div class="post-actions">
+          <button class="like-btn" data-post-id="1">
+            <span class="heart-icon">❤</span>
+            <span class="like-count">50</span>
+          </button>
+        <div class="comment-count" data-post-id="1">
+            <span class="comment-icon">💬</span>
+            <span class="count">20</span>
+          </div>
+      </div>
+      <div class="comment-section">
+          <input type="text" class="comment-input" placeholder="Add a comment..." data-post-id="1">
+            <button class="comment-submit" data-post-id="1">Post Comment</button>
+            <div class="comments-toggle" data-post-id="1">Show Comments (20)</div>
+            <div class="comments-list" data-post-id="1" style="display: none;">
+              <!-- 评论内容 - 添加更多评论以确保滚动条出现 -->
+              <div class="comment-item">
+                <span class="comment-user">Charlie:</span>
+                <span class="comment-content">Looks delicious! Can you share the recipe? 🥖</span>
+              </div>
+              <div class="comment-item">
+                <span class="comment-user">Diana:</span>
+                <span class="comment-content">Perfect crust color! How long did you ferment it?</span>
+              </div>
+              <div class="comment-item">
+                <span class="comment-user">Ethan:</span>
+                <span class="comment-content">Awesome! I just tried making one too, not as good as yours 😊</span>
+              </div>
+              <div class="comment-item">
+                <span class="comment-user">Fiona:</span>
+                <span class="comment-content">Must have a great sour aroma! 😍</span>
+              </div>
+              <div class="comment-item">
+                <span class="comment-user">George:</span>
+                <span class="comment-content">The texture looks so fluffy, learned a lot!</span>
+              </div>
+              <div class="comment-item">
+                <span class="comment-user">Lisa:</span>
+                <span class="comment-content">This is exactly what I needed! Thank you for sharing. 🌟</span>
+              </div>
+              <div class="comment-item">
+                <span class="comment-user">David:</span>
+                <span class="comment-content">I have a question about the recipe. Can you explain more? ❓</span>
+              </div>
+              <div class="comment-item">
+                <span class="comment-user">Olivia:</span>
+                <span class="comment-content">Beautiful work! The crust looks perfect. 💖</span>
+              </div>
+              <div class="comment-item">
+                <span class="comment-user">James:</span>
+                <span class="comment-content">I tried this yesterday and it worked perfectly! Thanks! ✅</span>
+              </div>
+              <div class="comment-item">
+                <span class="comment-user">Sophia:</span>
+                <span class="comment-content">Could you share more details about your process? 📝</span>
+              </div>
+              <div class="comment-item">
+                <span class="comment-user">Robert:</span>
+                <span class="comment-content">This is going to save me so much time! 🎉</span>
+              </div>
+              <button class="scroll-to-bottom" data-post-id="1">▼</button>
+          </div>
+        </div>
+    </section>
+
+    <section class="post">
+      <strong>Bob</strong> <small style="color:var(--muted)">in Photography · 6h</small>
+      <p>Golden hour photos from last weekend.</p>
+      <img src="images/cityphotography.jpg" alt="golden hour">
+      <div class="post-actions">
+          <button class="like-btn" data-post-id="2">
+            <span class="heart-icon">❤</span>
+            <span class="like-count">100</span>
+          </button>
+        <div class="comment-count" data-post-id="2">
+            <span class="comment-icon">💬</span>
+            <span class="count">47</span>
+          </div>
+      </div>
+      <div class="comment-section">
+          <input type="text" class="comment-input" placeholder="Add a comment..." data-post-id="2">
+            <button class="comment-submit" data-post-id="2">Post Comment</button>
+            <div class="comments-toggle" data-post-id="2">Show Comments (47)</div>
+            <div class="comments-list" data-post-id="2" style="display: none;">
+              <!-- 评论内容 - 添加更多评论以确保滚动条出现 -->
+              <div class="comment-item">
+                <span class="comment-user">Hannah:</span>
+                <span class="comment-content">Perfectly captured the light! 🌇</span>
+              </div>
+              <div class="comment-item">
+                <span class="comment-user">Ian:</span>
+                <span class="comment-content">Where was this taken? The view is amazing!</span>
+              </div>
+              <div class="comment-item">
+                <span class="comment-user">Julia:</span>
+                <span class="comment-content">Golden hour light is truly magical ✨</span>
+              </div>
+              <div class="comment-item">
+                <span class="comment-user">Kevin:</span>
+                <span class="comment-content">Great composition and depth!</span>
+              </div>
+              <div class="comment-item">
+                <span class="comment-user">Lily:</span>
+                <span class="comment-content">I love urban photography too, great angle selection! 📸</span>
+              </div>
+              <div class="comment-item">
+                <span class="comment-user">Lisa:</span>
+                <span class="comment-content">This is exactly what I needed! Thank you for sharing. 🌟</span>
+              </div>
+              <div class="comment-item">
+                <span class="comment-user">David:</span>
+                <span class="comment-content">What camera settings did you use? I'd love to know! ❓</span>
+              </div>
+              <div class="comment-item">
+                <span class="comment-user">Olivia:</span>
+                <span class="comment-content">Beautiful work! The lighting is incredible. 💖</span>
+              </div>
+              <div class="comment-item">
+                <span class="comment-user">James:</span>
+                <span class="comment-content">I tried shooting at golden hour too, but mine don't look like this! ✅</span>
+              </div>
+              <div class="comment-item">
+                <span class="comment-user">Sophia:</span>
+                <span class="comment-content">Could you share more of your photography tips? 📝</span>
+              </div>
+              <div class="comment-item">
+                <span class="comment-user">Robert:</span>
+                <span class="comment-content">This is absolutely stunning! 🎉</span>
+              </div>
+              <button class="scroll-to-bottom" data-post-id="2">▼</button>
+          </div>
+        </div>
+    </section>
+
+  </main>
+  <footer style="padding:14px 22px;color:var(--muted)">© 2025 Hobby Circle — Feed (demo)</footer>
+</body>
+</html>
+ 
+    <script>
+      // 点赞功能
+      document.querySelectorAll('.like-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const postId = this.getAttribute('data-post-id');
+          const countEl = this.querySelector('.like-count');
+          let count = parseInt(countEl.textContent);
+          
+          // 切换点赞状态
+          if (this.classList.contains('liked')) {
+            count--;
+            this.classList.remove('liked');
+          } else {
+            count++;
+            this.classList.add('liked');
+          }
+          
+          countEl.textContent = count;
+        });
+      });
+
+      // 评论功能
+      document.querySelectorAll('.comment-submit').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const postId = this.getAttribute('data-post-id');
+          const input = this.previousElementSibling;
+          const comment = input.value.trim();
+          if (comment) {
+            const listEl = document.querySelector(`.comments-list[data-post-id="${postId}"]`);
+            const commentItem = document.createElement('div');
+            commentItem.className = 'comment-item';
+            
+            // 创建用户名和评论内容元素，使新评论也显示用户名
+            const userNameSpan = document.createElement('span');
+            userNameSpan.className = 'comment-user';
+            userNameSpan.textContent = 'You:';
+            
+            const commentContentSpan = document.createElement('span');
+            commentContentSpan.className = 'comment-content';
+            commentContentSpan.textContent = comment;
+            
+            commentItem.appendChild(userNameSpan);
+            commentItem.appendChild(commentContentSpan);
+            
+            // 添加新评论的动画效果
+            commentItem.style.opacity = '0';
+            commentItem.style.transform = 'translateX(-10px)';
+            commentItem.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+            
+            listEl.appendChild(commentItem);
+            
+            // 触发重排后应用动画
+            setTimeout(() => {
+              commentItem.style.opacity = '1';
+              commentItem.style.transform = 'translateX(0)';
+            }, 10);
+            
+            input.value = '';
+            
+            // 更新评论数量
+            const commentCountEl = document.querySelector(`.comment-count[data-post-id="${postId}"] .count`);
+            let count = parseInt(commentCountEl.textContent);
+            count++;
+            commentCountEl.textContent = count;
+            
+            // Update comment toggle button text
+            const toggleBtn = document.querySelector(`.comments-toggle[data-post-id="${postId}"]`);
+            if (toggleBtn.textContent.includes('Show Comments')) {
+              toggleBtn.textContent = `Show Comments (${count})`;
+            } else {
+              // 如果评论已展开，确保切换按钮也更新数量
+              toggleBtn.textContent = `Hide Comments`;
+              
+              // 添加一个临时通知，显示"评论已添加"
+              const notification = document.createElement('div');
+              notification.textContent = 'Comment added!';
+              notification.style.cssText = 'position: fixed; bottom: 20px; right: 20px; background: var(--accent); color: white; padding: 10px 15px; border-radius: 6px; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15);';
+              document.body.appendChild(notification);
+              setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => {
+                  notification.remove();
+                }, 500);
+              }, 2000);
+            }
+          }
+        });
+      });
+      
+      // 点击评论数量可以聚焦到评论输入框
+      document.querySelectorAll('.comment-count').forEach(element => {
+        element.addEventListener('click', function() {
+          const postId = this.getAttribute('data-post-id');
+          const commentInput = document.querySelector(`.comment-input[data-post-id="${postId}"]`);
+          commentInput.focus();
+        });
+      });
+      
+      // 评论展开/收起功能
+      document.querySelectorAll('.comments-toggle').forEach(element => {
+        element.addEventListener('click', function() {
+            const postId = this.getAttribute('data-post-id');
+            const commentsList = document.querySelector(`.comments-list[data-post-id="${postId}"]`);
+            const commentCount = document.querySelector(`.comment-count[data-post-id="${postId}"] .count`).textContent;
+            
+            // 修复评论展开问题
+            if (commentsList.style.display === 'none' || commentsList.style.display === '') {
+              // 重置所有样式
+              commentsList.style = '';
+              commentsList.style.display = 'block';
+              commentsList.style.opacity = '0';
+              commentsList.style.transform = 'translateY(-10px)';
+              commentsList.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+              
+              // 触发重排后应用动画
+              setTimeout(() => {
+                commentsList.style.opacity = '1';
+                commentsList.style.transform = 'translateY(0)';
+              }, 10);
+              
+              this.textContent = 'Hide Comments';
+              this.classList.add('active');
+            } else {
+              // 添加收起动画
+              commentsList.style.opacity = '0';
+              commentsList.style.transform = 'translateY(-10px)';
+              
+              setTimeout(() => {
+                commentsList.style.display = 'none';
+              }, 300);
+              
+              this.textContent = `Show Comments (${commentCount})`;
+              this.classList.remove('active');
+            }
+          });
+      });
+      
+      // 简单直接的滚动到底部功能
+      window.addEventListener('DOMContentLoaded', function() {
+        // 为每个滚动按钮添加点击事件
+        document.querySelectorAll('.scroll-to-bottom').forEach(button => {
+          // 使用内联onclick属性，确保最直接的事件处理
+          button.onclick = function() {
+            // 获取对应的评论列表
+            const postId = this.getAttribute('data-post-id');
+            const commentsList = document.querySelector(`.comments-list[data-post-id="${postId}"]`);
+            
+            if (commentsList) {
+              // 确保评论列表有滚动功能
+              commentsList.style.maxHeight = '300px';
+              commentsList.style.overflowY = 'auto';
+              
+              // 直接滚动到底部
+              commentsList.scrollTop = commentsList.scrollHeight;
+              
+              // 视觉反馈
+              this.style.transform = 'scale(0.9)';
+              setTimeout(() => {
+                this.style.transform = 'scale(1)';
+              }, 150);
+            }
+          };
+        });
+      });
+      
+      // 确保所有评论列表在显示时都有滚动功能
+      document.querySelectorAll('.comments-toggle').forEach(toggle => {
+        toggle.addEventListener('click', function() {
+          const postId = this.getAttribute('data-post-id');
+          setTimeout(() => {
+            const commentsList = document.querySelector(`.comments-list[data-post-id="${postId}"]`);
+            if (commentsList && commentsList.style.display !== 'none') {
+              commentsList.style.maxHeight = '300px';
+              commentsList.style.overflowY = 'auto';
+              commentsList.style.position = 'relative';
+            }
+          }, 100);
+        });
+      });
+    </script>
+  </body>
+</html>

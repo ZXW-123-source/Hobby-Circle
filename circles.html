@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hobby Circle — Circles</title>
+  <style>
+    :root{--accent:#2b8cff;--bg:#f7f9fc;--card:#ffffff;--muted:#6b7280}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,Segoe UI,Helvetica,Arial;background:var(--bg);color:#111}
+    header{background:linear-gradient(90deg,#fff 0%,rgba(255,255,255,0.8) 100%);padding:14px 22px;display:flex;align-items:center;gap:14px}
+    .logo img{height:40px;width:40px;object-fit:cover;border-radius:8px}
+    nav{margin-left:auto;display:flex;gap:12px;align-items:center}
+    nav a{color:var(--muted);text-decoration:none;font-weight:700;padding:6px 8px;border-radius:6px}
+    nav a:hover{color:var(--accent)}
+    main{padding:18px 22px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+    .card{background:var(--card);border-radius:10px;padding:12px;box-shadow:0 6px 18px rgba(16,24,40,0.04)}
+    .card img{width:100%;height:140px;object-fit:cover;border-radius:8px}
+  .card .meta{display:flex;gap:8px;align-items:center;margin-top:8px}
+  .card .badge{background:#eef4ff;color:var(--accent);padding:4px 8px;border-radius:999px;font-size:12px;font-weight:700}
+  .card .members{margin-left:auto;color:var(--muted);font-size:12px}
+  .card .actions{display:flex;gap:8px;align-items:center;margin-top:10px}
+  .card .actions button{background:none;border:1px solid transparent;padding:6px 8px;border-radius:8px;cursor:pointer;font-weight:700}
+  .card .actions button.icon{display:inline-flex;align-items:center;gap:6px;border:1px solid #eef4ff;background:#fff}
+  .card .actions button.icon.liked{color:#d23f3f;background:rgba(210,63,63,0.06);border-color:rgba(210,63,63,0.08)}
+  .card .actions .join{margin-left:auto;background:var(--accent);color:#fff;padding:6px 10px;border-radius:8px}
+  .members-count{font-weight:700}
+    .create{background:linear-gradient(90deg,#fff,#f3f8ff);padding:16px;border-radius:10px;margin-bottom:18px}
+    form input,form textarea{width:100%;padding:8px;margin-top:8px;border:1px solid #e6eef9;border-radius:8px}
+    .btn{background:var(--accent);color:#fff;padding:8px 12px;border-radius:8px;display:inline-block;margin-top:8px;text-decoration:none}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo"><img src="images/logo.jpg" alt="logo"></div>
+    <strong>Hobby Circle</strong>
+    <nav>
+      <a href="index.html">Home</a>
+      <a class="active" href="circles.html">Circles</a>
+      <a href="feed.html">Feed</a>
+      <a href="signup.html">Sign Up</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="create" id="create">
+      <h2>Create a new Circle</h2>
+      <form>
+        <label>Circle name</label>
+        <input placeholder="e.g. Home Baking" />
+        <label>Tags (comma separated)</label>
+        <input placeholder="baking,food,recipes" />
+        <label>Description</label>
+        <textarea rows="3" placeholder="Short description"></textarea>
+        <a class="btn" href="#">Create (demo)</a>
+      </form>
+    </section>
+
+    <section>
+      <h2>Browse Circles</h2>
+      <div class="grid">
+        <article class="card">
+          <img src="images/cityphotography.jpg" alt="Photography">
+          <h3>Photography</h3>
+          <p>Share techniques, gear tips, your latest shots, connect with photographers, and grow your skills and creativity across all genres.</p>
+          <div class="meta"><span class="badge">Photography</span><span class="members"><span class="members-count">1.2k</span> members</span></div>
+          <div class="actions">
+            <button class="icon btn-like" aria-pressed="false" data-likes="120">❤ <span class="count">120</span></button>
+            <button class="icon btn-comment" data-comments="8">💬 <span class="count">8</span></button>
+            <button class="join" data-members="1200">Join • <span class="members-count">1.2k</span></button>
+          </div>
+        </article>
+        <article class="card">
+          <img src="images/reading club.jpg" alt="Reading">
+          <h3>Reading Club</h3>
+          <p>Join our vibrant community for deep book discussions, author spotlights, and in-person meetups to connect with fellow book lovers.</p>
+          <div class="meta"><span class="badge">Books</span><span class="members"><span class="members-count">860</span> members</span></div>
+          <div class="actions">
+            <button class="icon btn-like" aria-pressed="false" data-likes="34">❤ <span class="count">34</span></button>
+            <button class="icon btn-comment" data-comments="12">💬 <span class="count">12</span></button>
+            <button class="join" data-members="860">Join • <span class="members-count">860</span></button>
+          </div>
+        </article>
+        <article class="card">
+          <img src="images/backery.jpg" alt="Bakery">
+          <h3>Bakery</h3>
+          <p>Discover mouthwatering recipes, expert baking techniques, troubleshooting tips, and share your creations to elevate your cakes, breads, and pastries.</p>
+          <div class="meta"><span class="badge">Food</span><span class="members"><span class="members-count">410</span> members</span></div>
+          <div class="actions">
+            <button class="icon btn-like" aria-pressed="false" data-likes="9">❤ <span class="count">9</span></button>
+            <button class="icon btn-comment" data-comments="1">💬 <span class="count">1</span></button>
+            <button class="join" data-members="410">Join • <span class="members-count">410</span></button>
+          </div>
+        </article>
+        <article class="card">
+          <img src="images/music.jpg" alt="Music">
+          <h3>Music</h3>
+          <p>Share your favorite tracks, curated playlists across genres, and pro music tips on production, instruments, and discovering hidden gems.</p>
+          <div class="meta"><span class="badge">Music</span><span class="members"><span class="members-count">540</span> members</span></div>
+          <div class="actions">
+            <button class="icon btn-like" aria-pressed="false" data-likes="76">❤ <span class="count">76</span></button>
+            <button class="icon btn-comment" data-comments="14">💬 <span class="count">14</span></button>
+            <button class="join" data-members="540">Join • <span class="members-count">540</span></button>
+          </div>
+        </article>
+        <article class="card">
+          <img src="images/movie.jpg" alt="Movies">
+          <h3>Movies</h3>
+          <p>Discuss blockbuster hits, indie films, in-depth reviews, and share personalized watchlist recommendations across all eras and genres.</p>
+          <div class="meta"><span class="badge">Movies</span><span class="members"><span class="members-count">680</span> members</span></div>
+          <div class="actions">
+            <button class="icon btn-like" aria-pressed="false" data-likes="102">❤ <span class="count">102</span></button>
+            <button class="icon btn-comment" data-comments="20">💬 <span class="count">20</span></button>
+            <button class="join" data-members="680">Join • <span class="members-count">680</span></button>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer style="padding:14px 22px;color:var(--muted)">© 2025 Hobby Circle — Circles</footer>
+  <script>
+    (function(){
+      function formatNumber(n){ if(n>=1000) return (n/1000).toFixed(n>=10000?0:1)+'k'; return n+''; }
+      document.querySelectorAll('.btn-like').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const countEl = btn.querySelector('.count');
+          let likes = parseInt(btn.getAttribute('data-likes')||'0',10);
+          const pressed = btn.classList.toggle('liked');
+          if(pressed){ likes += 1; btn.setAttribute('aria-pressed','true'); }
+          else { likes = Math.max(0, likes-1); btn.setAttribute('aria-pressed','false'); }
+          btn.setAttribute('data-likes', likes);
+          countEl.textContent = formatNumber(likes);
+        });
+      });
+      document.querySelectorAll('.btn-comment').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const countEl = btn.querySelector('.count');
+          let comments = parseInt(btn.getAttribute('data-comments')||'0',10);
+          const text = prompt('Add a comment (demo):');
+          if(text){ comments += 1; btn.setAttribute('data-comments', comments); countEl.textContent = comments; }
+        });
+      });
+      document.querySelectorAll('.join').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          let members = parseInt(btn.getAttribute('data-members')||'0',10);
+          const joined = btn.classList.toggle('joined');
+          if(joined){ members += 1; btn.textContent = 'Joined • '+formatNumber(members); btn.style.background='#6fb0ff'; }
+          else { members = Math.max(0,members-1); btn.textContent = 'Join • '+formatNumber(members); btn.style.background='var(--accent)'; }
+          btn.setAttribute('data-members', members);
+          const card = btn.closest('.card'); if(card){ card.querySelectorAll('.members-count').forEach(el=>{ el.textContent = formatNumber(members); }); }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

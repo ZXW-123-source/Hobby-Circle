@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Obby Circle — Home</title>
+  <style>
+    :root{--accent:#2b8cff;--bg:#f7f9fc;--card:#ffffff;--muted:#6b7280}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,Segoe UI,Helvetica,Arial;background:var(--bg);color:#111}
+    header{background:linear-gradient(90deg,#fff 0%,rgba(255,255,255,0.8) 100%);padding:18px 28px;display:flex;align-items:center;gap:18px}
+    .logo{display:flex;align-items:center;gap:10px}
+    .logo img{height:48px;width:48px;object-fit:cover;border-radius:8px}
+    nav{margin-left:auto;display:flex;gap:14px;align-items:center}
+    nav a{color:var(--muted);text-decoration:none;font-weight:600}
+    .hero{display:flex;gap:28px;padding:40px 28px;align-items:center}
+    .hero .intro{max-width:640px}
+    .hero h1{font-size:28px;margin:0 0 10px}
+    .hero p{margin:0 0 18px;color:var(--muted)}
+    .cta{background:var(--accent);color:#fff;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:700}
+    .hero .hero-image{flex:1;text-align:right}
+    .hero .hero-image img{max-width:420px;width:80%;border-radius:12px;box-shadow:0 8px 30px rgba(43,140,255,0.12)}
+    .section{padding:18px 28px 48px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px;margin-top:14px}
+    .card{background:var(--card);border-radius:12px;padding:12px;box-shadow:0 6px 18px rgba(16,24,40,0.04);overflow:hidden}
+    .card img{width:100%;height:140px;object-fit:cover;border-radius:8px}
+    .card h3{margin:10px 0 6px;font-size:16px}
+    .card p{margin:0;color:var(--muted);font-size:13px}
+    footer{padding:18px 28px;color:var(--muted);font-size:13px;border-top:1px solid #e6eef9}
+    @media (max-width:700px){.hero{flex-direction:column}.hero .hero-image{text-align:left}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="images/logo.png" alt="Obby Circle logo" onerror="this.style.display='none'">
+      <div>
+        <strong>Obby Circle</strong><br>
+        <small style="color:var(--muted);font-weight:600">Connect over shared hobbies</small>
+      </div>
+    </div>
+    <nav>
+      <a href="#">Discover</a>
+      <a href="#">Circles</a>
+      <a href="#">Messages</a>
+      <a href="#">Profile</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="intro">
+        <h1>Find people who love what you love</h1>
+        <p>Create or join interest circles for photography, reading, sports and more. Share updates, images and connect.</p>
+        <a class="cta" href="#">Get Started</a>
+      </div>
+      <div class="hero-image">
+        <img src="images/hero.jpg" alt="Community image" onerror="this.style.display='none'">
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Popular Circles</h2>
+      <div class="grid">
+        <article class="card">
+          <img src="images/photography.jpg" alt="Photography circle" onerror="this.style.display='none'">
+          <h3>Photography</h3>
+          <p>Share techniques, gear tips and your latest shots.</p>
+        </article>
+
+        <article class="card">
+          <img src="images/reading.jpg" alt="Reading circle" onerror="this.style.display='none'">
+          <h3>Reading Club</h3>
+          <p>Book discussions, recommendations and meetups.</p>
+        </article>
+
+        <article class="card">
+          <img src="images/sports.jpg" alt="Sports circle" onerror="this.style.display='none'">
+          <h3>Sports & Fitness</h3>
+          <p>Find workout partners and local events.</p>
+        </article>
+
+        <article class="card">
+          <img src="images/arts.jpg" alt="Arts circle" onerror="this.style.display='none'">
+          <h3>Arts & Crafts</h3>
+          <p>DIY projects, tutorials and inspiration.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © 2025 Obby Circle — Demo static homepage. If images don't appear, replace the filenames in this file with those in your `images/` folder.
+  </footer>
+</body>
+</html>

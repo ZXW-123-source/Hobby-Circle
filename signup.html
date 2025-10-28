@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hobby Circle — Sign Up</title>
+  <style>
+    :root{--accent:#2b8cff;--bg:#f7f9fc;--muted:#6b7280}
+    body{margin:0;font-family:Inter,Segoe UI,Helvetica,Arial;background:var(--bg);color:#111}
+    header{background:linear-gradient(90deg,#fff 0%,rgba(255,255,255,0.8) 100%);padding:14px 22px;display:flex;align-items:center;gap:14px}
+    main{padding:18px 22px}
+    form{max-width:540px;background:#fff;padding:16px;border-radius:10px;box-shadow:0 6px 18px rgba(16,24,40,0.04)}
+    input,select{width:100%;padding:8px;margin-top:8px;border:1px solid #e6eef9;border-radius:8px}
+    .btn{background:var(--accent);color:#fff;padding:8px 12px;border-radius:8px;display:inline-block;margin-top:12px;text-decoration:none}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo"><img src="images/logo.jpg" alt="logo" style="height:36px"></div>
+    <strong>Hobby Circle</strong>
+    <nav style="margin-left:auto;display:flex;gap:12px">
+      <a href="index.html">Home</a>
+      <a href="circles.html">Circles</a>
+      <a href="feed.html">Feed</a>
+      <a class="active" href="signup.html">Sign Up</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Create your account</h2>
+    <form>
+      <label>Username</label>
+      <input placeholder="yourname" />
+      <label>Display name</label>
+      <input placeholder="Your Display Name" />
+      <label>Interests (comma separated)</label>
+      <input placeholder="photography,reading,baking" />
+      <label>Tell us about yourself</label>
+      <textarea rows="4" style="width:100%;padding:8px;border-radius:8px;border:1px solid #e6eef9"></textarea>
+      <a class="btn" href="#">Sign Up (demo)</a>
+    </form>
+  </main>
+
+  <footer style="padding:14px 22px;color:var(--muted)">© 2025 Hobby Circle — Sign Up (demo)</footer>
+</body>
+</html>
