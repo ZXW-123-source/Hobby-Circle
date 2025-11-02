@@ -5,13 +5,175 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Hobby Circle — Sign Up</title>
   <style>
-    :root{--accent:#2b8cff;--bg:#f7f9fc;--muted:#6b7280}
-    body{margin:0;font-family:Inter,Segoe UI,Helvetica,Arial;background:var(--bg);color:#111}
-    header{background:linear-gradient(90deg,#fff 0%,rgba(255,255,255,0.8) 100%);padding:14px 22px;display:flex;align-items:center;gap:14px}
-    main{padding:18px 22px}
-    form{max-width:540px;background:#fff;padding:16px;border-radius:10px;box-shadow:0 6px 18px rgba(16,24,40,0.04)}
-    input,select{width:100%;padding:8px;margin-top:8px;border:1px solid #e6eef9;border-radius:8px}
-    .btn{background:var(--accent);color:#fff;padding:8px 12px;border-radius:8px;display:inline-block;margin-top:12px;text-decoration:none}
+    :root{--accent:#2b8cff;--bg:#f7f9fc;--muted:#6b7280;--success:#10b981;--error:#ef4444}
+    body{margin:0;font-family:Inter,Segoe UI,Helvetica,Arial;background:var(--bg);color:#111;line-height:1.6}
+    header{background:linear-gradient(90deg,#fff 0%,rgba(255,255,255,0.8) 100%);padding:14px 22px;display:flex;align-items:center;gap:14px;box-shadow:0 2px 10px rgba(0,0,0,0.05);position:sticky;top:0;z-index:100}
+    main{padding:24px 22px;min-height:calc(100vh - 140px);display:flex;flex-direction:column;align-items:center}
+    .signup-container{max-width:600px;width:100%;background:#fff;padding:32px;border-radius:12px;box-shadow:0 8px 24px rgba(16,24,40,0.08)}
+    .signup-header{text-align:center;margin-bottom:32px}
+    .signup-header h1{margin:0 0 8px 0;color:#111;font-size:28px}
+    .signup-header p{margin:0;color:var(--muted);font-size:16px}
+    .avatar-section{display:flex;flex-direction:column;align-items:center;margin-bottom:24px}
+    .avatar-placeholder{
+      width:120px;height:120px;border-radius:50%;background-color:#e6eef9;display:flex;align-items:center;justify-content:center;
+      position:relative;cursor:pointer;transition:all 0.3s ease;overflow:hidden;
+      border:3px solid transparent;
+    }
+    .avatar-placeholder:hover{
+      border-color:var(--accent);
+      transform:scale(1.05);
+    }
+    .avatar-placeholder img{width:100%;height:100%;object-fit:cover}
+    .avatar-placeholder .edit-icon{
+      position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.6);color:white;padding:8px;text-align:center;
+      font-size:12px;display:none;
+    }
+    .avatar-placeholder:hover .edit-icon{display:block}
+    .avatar-input{display:none}
+    .avatar-label{margin-top:12px;font-size:14px;color:var(--accent);cursor:pointer;transition:color 0.2s ease}
+    .avatar-label:hover{color:#1a6fe0;text-decoration:underline}
+    .form-group{margin-bottom:20px;position:relative}
+    .form-group label{display:block;margin-bottom:6px;color:#333;font-weight:500}
+    .form-group input,
+    .form-group select,
+    .form-group textarea{
+      width:100%;padding:12px;border:1px solid #e6eef9;border-radius:8px;font-size:16px;
+      transition:all 0.2s ease;box-sizing:border-box;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus{
+      outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(43,140,255,0.1);
+    }
+    .form-group input.error,
+    .form-group textarea.error{
+      border-color:var(--error);
+    }
+    .form-group input.success,
+    .form-group textarea.success{
+      border-color:var(--success);
+    }
+    .validation-message{
+      font-size:12px;margin-top:4px;display:none;
+    }
+    .validation-message.error{
+      color:var(--error);display:block;
+    }
+    .validation-message.success{
+      color:var(--success);display:block;
+    }
+    .password-strength{
+      margin-top:6px;height:4px;background-color:#e6eef9;border-radius:2px;overflow:hidden;
+    }
+    .password-strength-bar{
+      height:100%;background-color:var(--error);transition:width 0.3s ease, background-color 0.3s ease;
+    }
+    .password-strength-bar.weak{background-color:#ef4444;width:33%}
+    .password-strength-bar.medium{background-color:#f59e0b;width:66%}
+    .password-strength-bar.strong{background-color:#10b981;width:100%}
+    .password-strength-text{
+      font-size:12px;margin-top:4px;color:var(--muted);
+    }
+    .form-group textarea{resize:vertical;min-height:100px;line-height:1.5}
+    .interests-container{
+      display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;
+    }
+    .interest-tag{
+      background-color:#e6eef9;color:var(--accent);padding:4px 12px;border-radius:20px;font-size:14px;display:flex;align-items:center;gap:6px;
+    }
+    .interest-tag .remove-tag{cursor:pointer;font-weight:bold}
+    .btn{background:var(--accent);color:#fff;padding:12px 24px;border-radius:8px;border:none;font-size:16px;font-weight:500;
+      cursor:pointer;transition:all 0.2s ease;display:inline-block;text-decoration:none}
+    .btn:hover:not(:disabled){background:#1a6fe0;transform:translateY(-1px);box-shadow:0 4px 12px rgba(43,140,255,0.3)}
+    .btn:active:not(:disabled){transform:translateY(0)}
+    .btn:disabled{
+      background-color:#ccc;cursor:not-allowed;transform:none;box-shadow:none;
+    }
+    .btn-block{width:100%}
+    .form-footer{text-align:center;margin-top:24px;color:var(--muted);font-size:14px}
+    .form-footer a{color:var(--accent);text-decoration:none}
+    .form-footer a:hover{text-decoration:underline}
+    .notification{
+      position:fixed;top:80px;right:20px;padding:16px 24px;border-radius:8px;color:white;font-weight:500;z-index:1000;
+      box-shadow:0 4px 12px rgba(0,0,0,0.15);transform:translateX(100%);transition:transform 0.3s ease;
+      max-width:300px;
+    }
+    .notification.success{background-color:var(--success)}
+    .notification.error{background-color:var(--error)}
+    .notification.show{transform:translateX(0)}
+    .circles-selection{
+      display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;
+    }
+    .circle-option{
+      background-color:#f9fafb;border:1px solid #e6eef9;padding:8px 16px;border-radius:8px;cursor:pointer;
+      transition:all 0.2s ease;display:flex;align-items:center;gap:6px;
+    }
+    .circle-option:hover{border-color:var(--accent);background-color:#f0f4ff}
+    .circle-option.selected{background-color:var(--accent);border-color:var(--accent);color:white}
+    .avatar-preview{
+      display:flex;flex-wrap:gap;gap:12px;margin-top:12px;
+    }
+    .avatar-preview-item{
+      width:60px;height:60px;border-radius:50%;cursor:pointer;overflow:hidden;border:2px solid transparent;
+      transition:all 0.2s ease;
+    }
+    .avatar-preview-item:hover,
+    .avatar-preview-item.selected{
+      border-color:var(--accent);transform:scale(1.05);
+    }
+    .avatar-preview-item img{width:100%;height:100%;object-fit:cover}
+    footer{padding:20px 22px;color:var(--muted);text-align:center;background:white}
+    .terms-container{
+      display:flex;align-items:flex-start;gap:8px;margin-bottom:24px;
+    }
+    .terms-container input[type="checkbox"]{
+      margin-top:2px;width:auto;
+    }
+    .terms-container label{
+      flex:1;margin-bottom:0;font-weight:normal;font-size:14px;
+    }
+    .terms-container a{
+      color:var(--accent);text-decoration:none;
+    }
+    .terms-container a:hover{
+      text-decoration:underline;
+    }
+    .social-login-section{
+      margin:24px 0;position:relative;
+    }
+    .social-login-divider{
+      display:flex;align-items:center;text-align:center;margin-bottom:20px;
+    }
+    .social-login-divider::before,
+    .social-login-divider::after{
+      content:"";
+      flex:1;
+      border-bottom:1px solid #e6eef9;
+    }
+    .social-login-divider::before{
+      margin-right:16px;
+    }
+    .social-login-divider::after{
+      margin-left:16px;
+    }
+    .social-login-divider span{
+      color:var(--muted);font-size:14px;
+    }
+    .social-login-buttons{
+      display:flex;gap:12px;justify-content:center;
+    }
+    .social-btn{
+      flex:1;padding:12px;border:1px solid #e6eef9;background-color:white;border-radius:8px;
+      cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
+      transition:all 0.2s ease;font-size:14px;
+    }
+    .social-btn:hover{
+      border-color:var(--accent);background-color:#f0f4ff;transform:translateY(-1px);
+      box-shadow:0 2px 8px rgba(43,140,255,0.1);
+    }
+    .social-btn:active{
+      transform:translateY(0);
+    }
   </style>
 </head>
 <body>
@@ -27,20 +189,451 @@
   </header>
 
   <main>
-    <h2>Create your account</h2>
-    <form>
-      <label>Username</label>
-      <input placeholder="yourname" />
-      <label>Display name</label>
-      <input placeholder="Your Display Name" />
-      <label>Interests (comma separated)</label>
-      <input placeholder="photography,reading,baking" />
-      <label>Tell us about yourself</label>
-      <textarea rows="4" style="width:100%;padding:8px;border-radius:8px;border:1px solid #e6eef9"></textarea>
-      <a class="btn" href="#">Sign Up (demo)</a>
-    </form>
+    <div class="signup-container">
+      <div class="signup-header">
+        <h1>Create Your Account</h1>
+        <p>Join our community of hobby enthusiasts and connect with like-minded people</p>
+      </div>
+      
+      <form id="signup-form">
+        <!-- Avatar Selection -->
+        <div class="avatar-section">
+          <div class="avatar-placeholder" id="avatar-placeholder">
+            <span style="font-size:48px;color:var(--muted)">👤</span>
+            <div class="edit-icon">Change</div>
+          </div>
+          <input type="hidden" id="selected-avatar" name="avatar" value="">
+          <label for="custom-avatar" class="avatar-label">Choose Profile Picture</label>
+          <input type="file" id="custom-avatar" class="avatar-input" accept="image/*">
+          
+          <div class="avatar-preview">
+            <div class="avatar-preview-item" data-avatar="images/user1.jpg"><img src="images/user1.jpg" alt="Avatar 1"></div>
+            <div class="avatar-preview-item" data-avatar="images/user2.jpg"><img src="images/user2.jpg" alt="Avatar 2"></div>
+            <div class="avatar-preview-item" data-avatar="images/user3.jpg"><img src="images/user3.jpg" alt="Avatar 3"></div>
+            <div class="avatar-preview-item" data-avatar="images/user4.jpg"><img src="images/user4.jpg" alt="Avatar 4"></div>
+            <div class="avatar-preview-item" data-avatar="images/user5.jpg"><img src="images/user5.jpg" alt="Avatar 5"></div>
+          </div>
+        </div>
+        
+        <!-- Form Fields -->
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" placeholder="yourname" required>
+          <div class="validation-message" id="username-message">Username must be 3-20 characters long and can only contain letters, numbers, and underscores.</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="display-name">Display Name</label>
+          <input type="text" id="display-name" name="display-name" placeholder="Your Display Name" required>
+          <div class="validation-message" id="display-name-message">Display name must be 2-50 characters long.</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" placeholder="your.email@example.com" required>
+          <div class="validation-message" id="email-message">Please enter a valid email address.</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Create a secure password" required>
+          <div class="password-strength">
+            <div class="password-strength-bar" id="password-strength-bar"></div>
+          </div>
+          <div class="password-strength-text" id="password-strength-text">Password strength will appear here</div>
+          <div class="validation-message" id="password-message">Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number.</div>
+        </div>
+        
+        <div class="form-group">
+          <label>Select Your Interests</label>
+          <div class="circles-selection">
+            <div class="circle-option" data-circle="Bakery">🍰 Bakery</div>
+            <div class="circle-option" data-circle="Photography">📷 Photography</div>
+            <div class="circle-option" data-circle="Music">🎵 Music</div>
+            <div class="circle-option" data-circle="Movies">🎬 Movies</div>
+            <div class="circle-option" data-circle="Art">🎨 Art</div>
+            <div class="circle-option" data-circle="Sports">⚽ Sports</div>
+            <div class="circle-option" data-circle="Reading">📚 Reading</div>
+            <div class="circle-option" data-circle="Travel">✈️ Travel</div>
+          </div>
+          <input type="hidden" id="selected-circles" name="circles" value="" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="bio">Tell Us About Yourself (Optional)</label>
+          <textarea id="bio" name="bio" placeholder="Share your hobbies, interests, and what brings you to Hobby Circle..."></textarea>
+          <div class="validation-message" id="bio-message">Bio must be between 10 and 500 characters long if provided.</div>
+        </div>
+        
+        <div class="terms-container">
+          <input type="checkbox" id="terms" name="terms" required>
+          <label for="terms">I agree to the <a href="#" onclick="alert('Privacy Policy will be displayed here.'); return false;">Privacy Policy</a> and <a href="#" onclick="alert('Terms of Service will be displayed here.'); return false;">Terms of Service</a> of Hobby Circle.</label>
+        </div>
+        
+        <div class="social-login-section">
+          <div class="social-login-divider">
+            <span>Or sign up with</span>
+          </div>
+          <div class="social-login-buttons">
+            <button type="button" class="social-btn" id="wechat-login">
+              <span>🇨🇳</span>
+              WeChat
+            </button>
+            <button type="button" class="social-btn" id="google-login">
+              <span>🔍</span>
+              Google
+            </button>
+          </div>
+        </div>
+        
+        <button type="submit" class="btn btn-block" id="create-account-btn" disabled>Create Account</button>
+        
+        <div class="form-footer">
+          Already have an account? <a href="index.html">Sign in</a>
+        </div>
+      </form>
+    </div>
   </main>
 
-  <footer style="padding:14px 22px;color:var(--muted)">© 2025 Hobby Circle — Sign Up (demo)</footer>
+  <!-- Notifications -->
+  <div id="success-notification" class="notification success">
+    Account created successfully! Redirecting to your feed...
+  </div>
+  <div id="error-notification" class="notification error">
+    Please fill in all required fields correctly.
+  </div>
+
+  <footer>© 2025 Hobby Circle — Connect Through Your Passions</footer>
+
+  <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Avatar selection
+        const avatarPlaceholder = document.getElementById('avatar-placeholder');
+        const customAvatarInput = document.getElementById('custom-avatar');
+        const selectedAvatarInput = document.getElementById('selected-avatar');
+        const avatarPreviewItems = document.querySelectorAll('.avatar-preview-item');
+        
+        // Form elements
+        const usernameInput = document.getElementById('username');
+        const displayNameInput = document.getElementById('display-name');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const bioInput = document.getElementById('bio');
+        const termsCheckbox = document.getElementById('terms');
+        const createAccountBtn = document.getElementById('create-account-btn');
+        
+        // Circle selection
+        const circleOptions = document.querySelectorAll('.circle-option');
+        const selectedCirclesInput = document.getElementById('selected-circles');
+        const selectedCircles = [];
+        
+        // Form submission
+        const signupForm = document.getElementById('signup-form');
+        const successNotification = document.getElementById('success-notification');
+        const errorNotification = document.getElementById('error-notification');
+        
+        // Social login buttons
+        const wechatLoginBtn = document.getElementById('wechat-login');
+        const googleLoginBtn = document.getElementById('google-login');
+        
+        // Handle avatar preview item click
+        avatarPreviewItems.forEach(item => {
+          item.addEventListener('click', function() {
+            // Remove selected class from all items
+            avatarPreviewItems.forEach(i => i.classList.remove('selected'));
+            // Add selected class to clicked item
+            this.classList.add('selected');
+            
+            // Get avatar URL
+            const avatarUrl = this.getAttribute('data-avatar');
+            selectedAvatarInput.value = avatarUrl;
+            
+            // Update placeholder image
+            avatarPlaceholder.innerHTML = `<img src="${avatarUrl}" alt="Selected avatar"><div class="edit-icon">Change</div>`;
+            checkFormValidity();
+          });
+        });
+        
+        // Handle custom avatar upload
+        customAvatarInput.addEventListener('change', function(e) {
+          if (e.target.files && e.target.files[0]) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+              // Update placeholder image
+              avatarPlaceholder.innerHTML = `<img src="${e.target.result}" alt="Custom avatar"><div class="edit-icon">Change</div>`;
+              // Store as Data URL
+              selectedAvatarInput.value = e.target.result;
+              // Remove selection from preview items
+              avatarPreviewItems.forEach(i => i.classList.remove('selected'));
+              checkFormValidity();
+            }
+            
+            reader.readAsDataURL(e.target.files[0]);
+          }
+        });
+        
+        // Trigger file input when clicking on placeholder
+        avatarPlaceholder.addEventListener('click', function() {
+          customAvatarInput.click();
+        });
+        
+        // Circle selection
+        circleOptions.forEach(option => {
+          option.addEventListener('click', function() {
+            const circle = this.getAttribute('data-circle');
+            const index = selectedCircles.indexOf(circle);
+            
+            if (index === -1) {
+              // Add circle
+              selectedCircles.push(circle);
+              this.classList.add('selected');
+            } else {
+              // Remove circle
+              selectedCircles.splice(index, 1);
+              this.classList.remove('selected');
+            }
+            
+            // Update hidden input
+            selectedCirclesInput.value = selectedCircles.join(',');
+            checkFormValidity();
+          });
+        });
+        
+        // Real-time validation
+        usernameInput.addEventListener('input', validateUsername);
+        displayNameInput.addEventListener('input', validateDisplayName);
+        emailInput.addEventListener('input', validateEmail);
+        passwordInput.addEventListener('input', function() {
+          validatePassword();
+          updatePasswordStrength();
+        });
+        bioInput.addEventListener('input', validateBio);
+        termsCheckbox.addEventListener('change', checkFormValidity);
+        
+        // Social login handlers
+        wechatLoginBtn.addEventListener('click', function() {
+          showNotification(errorNotification, 'WeChat login functionality is not implemented yet.');
+        });
+        
+        googleLoginBtn.addEventListener('click', function() {
+          showNotification(errorNotification, 'Google login functionality is not implemented yet.');
+        });
+        
+        // Initialize - just disable the button without showing errors
+        createAccountBtn.disabled = true;
+        
+        // Validation functions
+        function validateUsername() {
+            const username = usernameInput.value.trim();
+            const usernameMessage = document.getElementById('username-message');
+          
+          // Username must be 3-20 characters and only contain letters, numbers, and underscores
+          const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
+          
+          if (!usernameRegex.test(username)) {
+            usernameInput.classList.add('error');
+            usernameInput.classList.remove('success');
+            usernameMessage.classList.add('error');
+            return false;
+          } else {
+            usernameInput.classList.remove('error');
+            usernameInput.classList.add('success');
+            usernameMessage.classList.remove('error');
+            return true;
+          }
+        }
+        
+        function validateDisplayName() {
+          const displayName = displayNameInput.value.trim();
+          const displayNameMessage = document.getElementById('display-name-message');
+          
+          if (displayName.length < 2 || displayName.length > 50) {
+            displayNameInput.classList.add('error');
+            displayNameInput.classList.remove('success');
+            displayNameMessage.classList.add('error');
+            return false;
+          } else {
+            displayNameInput.classList.remove('error');
+            displayNameInput.classList.add('success');
+            displayNameMessage.classList.remove('error');
+            return true;
+          }
+        }
+        
+        function validateEmail() {
+          const email = emailInput.value.trim();
+          const emailMessage = document.getElementById('email-message');
+          
+          // Simple email regex
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          
+          if (!emailRegex.test(email)) {
+            emailInput.classList.add('error');
+            emailInput.classList.remove('success');
+            emailMessage.classList.add('error');
+            return false;
+          } else {
+            emailInput.classList.remove('error');
+            emailInput.classList.add('success');
+            emailMessage.classList.remove('error');
+            return true;
+          }
+        }
+        
+        function validatePassword() {
+          const password = passwordInput.value;
+          const passwordMessage = document.getElementById('password-message');
+          
+          // Password must be at least 8 characters and contain at least one uppercase letter, one lowercase letter, and one number
+          const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+          
+          if (!passwordRegex.test(password)) {
+            passwordInput.classList.add('error');
+            passwordInput.classList.remove('success');
+            passwordMessage.classList.add('error');
+            return false;
+          } else {
+            passwordInput.classList.remove('error');
+            passwordInput.classList.add('success');
+            passwordMessage.classList.remove('error');
+            return true;
+          }
+        }
+        
+        function validateBio() {
+          const bio = bioInput.value.trim();
+          const bioMessage = document.getElementById('bio-message');
+          
+          // Only validate if bio has content (optional field)
+          if (bio.length > 0 && (bio.length < 10 || bio.length > 500)) {
+            bioInput.classList.add('error');
+            bioInput.classList.remove('success');
+            bioMessage.classList.add('error');
+            return false;
+          } else {
+            bioInput.classList.remove('error');
+            bioInput.classList.add('success');
+            bioMessage.classList.remove('error');
+            return true;
+          }
+        }
+        
+        function updatePasswordStrength() {
+          const password = passwordInput.value;
+          const strengthBar = document.getElementById('password-strength-bar');
+          const strengthText = document.getElementById('password-strength-text');
+          
+          let strength = 0;
+          
+          // Check password length
+          if (password.length >= 8) strength += 1;
+          if (password.length >= 12) strength += 1;
+          
+          // Check for uppercase letters
+          if (/[A-Z]/.test(password)) strength += 1;
+          
+          // Check for lowercase letters
+          if (/[a-z]/.test(password)) strength += 1;
+          
+          // Check for numbers
+          if (/\d/.test(password)) strength += 1;
+          
+          // Check for special characters
+          if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+          
+          // Update strength indicator
+          if (strength <= 2) {
+            strengthBar.className = 'password-strength-bar weak';
+            strengthText.textContent = 'Weak';
+            strengthText.style.color = '#ef4444';
+          } else if (strength <= 4) {
+            strengthBar.className = 'password-strength-bar medium';
+            strengthText.textContent = 'Medium';
+            strengthText.style.color = '#f59e0b';
+          } else {
+            strengthBar.className = 'password-strength-bar strong';
+            strengthText.textContent = 'Strong';
+            strengthText.style.color = '#10b981';
+          }
+        }
+        
+        function checkFormValidity() {
+          const isUsernameValid = validateUsername();
+          const isDisplayNameValid = validateDisplayName();
+          const isEmailValid = validateEmail();
+          const isPasswordValid = validatePassword();
+          const isBioValid = validateBio(); // Bio is now optional but still needs validation if filled
+          const isAvatarSelected = selectedAvatarInput.value !== '';
+          const isCirclesSelected = selectedCirclesInput.value !== '';
+          const isTermsChecked = termsCheckbox.checked;
+          
+          // Enable create account button only if all fields are valid
+          createAccountBtn.disabled = !(isUsernameValid && isDisplayNameValid && isEmailValid && 
+                                      isPasswordValid && isBioValid && isAvatarSelected && 
+                                      isCirclesSelected && isTermsChecked);
+        }
+        
+        // Form submission
+        signupForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          // Form validation (additional check)
+          const username = usernameInput.value.trim();
+          const displayName = displayNameInput.value.trim();
+          const email = emailInput.value.trim();
+          const password = passwordInput.value;
+          const avatar = selectedAvatarInput.value;
+          const circles = selectedCirclesInput.value;
+          const bio = bioInput.value.trim();
+          
+          // Final validation
+          if (!username || !displayName || !email || !password || !avatar || !circles) {
+            showNotification(errorNotification, 'Please fill in all required fields.');
+            return;
+          }
+          
+          // Store user data in localStorage (simulating account creation)
+          const userData = {
+            username,
+            displayName,
+            email,
+            avatar,
+            circles: circles.split(','),
+            bio,
+            joinedDate: new Date().toISOString()
+          };
+          
+          localStorage.setItem('currentUser', JSON.stringify(userData));
+          localStorage.setItem('isLoggedIn', 'true');
+          
+          // Show success notification
+          showNotification(successNotification);
+          
+          // Redirect to feed after 2 seconds
+          setTimeout(() => {
+            window.location.href = 'feed.html';
+          }, 2000);
+        });
+        
+        // Show notification function
+        function showNotification(notificationElement, customMessage = null) {
+          // Update message if provided
+          if (customMessage) {
+            notificationElement.textContent = customMessage;
+          }
+          
+          // Show notification
+          notificationElement.classList.add('show');
+          
+          // Hide notification after 3 seconds
+          setTimeout(() => {
+            notificationElement.classList.remove('show');
+          }, 3000);
+        }
+        
+
+      });
+  </script>
 </body>
 </html>

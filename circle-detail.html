@@ -1,0 +1,2099 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hobby Circle — Circle Details</title>
+  <style>
+    :root{--accent:#2b8cff;--bg:#f7f9fc;--card:#ffffff;--muted:#6b7280}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,Segoe UI,Helvetica,Arial;background:var(--bg);color:#111}
+    header{background:linear-gradient(90deg,#fff 0%,rgba(255,255,255,0.8) 100%);padding:14px 22px;display:flex;align-items:center;gap:14px;box-shadow:0 2px 10px rgba(0,0,0,0.05);position:sticky;top:0;z-index:100}
+    .logo img{height:40px;width:40px;object-fit:cover;border-radius:8px}
+    nav{margin-left:auto;display:flex;gap:12px;align-items:center}
+    nav a{color:var(--muted);text-decoration:none;font-weight:700;padding:6px 8px;border-radius:6px}
+    nav a:hover{color:var(--accent)}
+    nav a.active{color:var(--accent)}
+    main{padding:18px 22px;max-width:1200px;margin:0 auto}
+    .circle-header{background:var(--card);border-radius:16px;padding:24px;box-shadow:0 6px 18px rgba(16,24,40,0.04);margin-bottom:24px}
+    .circle-cover{width:100%;height:240px;object-fit:cover;border-radius:12px;margin-bottom:24px}
+    .circle-info{display:flex;gap:20px;align-items:flex-start}
+    .circle-icon{width:120px;height:120px;border-radius:50%;object-fit:cover;border:4px solid white;box-shadow:0 4px 12px rgba(0,0,0,0.1);margin-top:-60px}
+    .circle-meta{flex:1}
+    .circle-meta h1{margin:0 0 8px 0;font-size:28px}
+    .circle-tags{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+    .circle-tags span{background:#eef4ff;color:var(--accent);padding:6px 12px;border-radius:999px;font-size:14px;font-weight:500}
+    .circle-stats{display:flex;gap:24px;margin:12px 0}
+    .circle-stats .stat{display:flex;gap:4px;align-items:center}
+    .circle-stats .stat-number{font-weight:700;font-size:18px}
+    .circle-actions{display:flex;gap:12px}
+    .btn{background:var(--accent);color:#fff;padding:8px 16px;border-radius:8px;display:inline-block;margin-top:8px;text-decoration:none;border:none;cursor:pointer;font-weight:600;transition:all 0.2s}
+    .btn:hover{background:#1a76e8}
+    .btn-secondary{background:#f0f0f0;color:#333}
+    .btn-secondary:hover{background:#e0e0e0}
+    .btn-danger{background:#dc3545;color:white}
+    .btn-danger:hover{background:#c82333}
+    .btn-joined{background:#4caf50;color:white}
+    .btn-joined:hover{background:#45a049}
+    .description-section{background:var(--card);border-radius:16px;padding:24px;box-shadow:0 6px 18px rgba(16,24,40,0.04);margin-bottom:24px}
+    .description-section h2{margin-top:0}
+    .tabs{display:flex;background:var(--card);border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(16,24,40,0.04);margin-bottom:24px}
+    .tab{padding:12px 20px;cursor:pointer;flex:1;text-align:center;font-weight:600;color:var(--muted);transition:all 0.2s}
+    .tab.active{background:var(--accent);color:white}
+    .tab-content{display:none;background:var(--card);border-radius:16px;padding:24px;box-shadow:0 6px 18px rgba(16,24,40,0.04);margin-bottom:24px}
+    .tab-content.active{display:block}
+    .post-card{background:var(--card);border-radius:12px;padding:20px;margin-bottom:16px;box-shadow:0 2px 8px rgba(16,24,40,0.04);border:1px solid #f0f0f0}
+    .post-header{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+    .post-avatar{width:40px;height:40px;border-radius:50%;object-fit:cover}
+    .post-user{font-weight:600}
+    .post-time{color:var(--muted);font-size:14px}
+    .post-content{margin:12px 0}
+    .post-actions{display:flex;gap:16px;margin-top:12px}
+    .post-action{display:flex;gap:6px;align-items:center;color:var(--muted);cursor:pointer}
+    .post-action:hover{color:var(--accent)}
+    .comment-form{margin:16px 0}
+    .comment-form textarea{width:100%;padding:12px;border:1px solid #e6eef9;border-radius:8px;resize:vertical}
+    .comments-container{margin-top:24px}
+    .comments-list{margin-top:12px;padding:12px;background:#f5f5f5;border-radius:8px;box-shadow:inset 0 1px 3px rgba(0,0,0,0.05);max-height:300px;overflow-y:auto;position:relative;scrollbar-width:thin;scrollbar-color:var(--accent) transparent}
+    .comments-list::-webkit-scrollbar{width:6px}
+    .comments-list::-webkit-scrollbar-track{background:transparent}
+    .comments-list::-webkit-scrollbar-thumb{background-color:var(--accent);border-radius:20px}
+    .scroll-to-bottom{position:absolute;right:10px;bottom:10px;background:var(--accent);color:white;width:36px;height:36px;border-radius:50%;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,0.2);font-size:18px;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease;z-index:100;border:none;outline:none}
+    .scroll-to-bottom:hover{background:#1a6fe0;transform:translateY(-2px)}
+    .comments-toggle{color:var(--accent);cursor:pointer;margin-top:8px;font-size:14px;user-select:none}
+    .comments-toggle:hover{text-decoration:underline}
+    .comment{display:flex;gap:12px;margin-bottom:16px}
+    .comment-avatar{width:32px;height:32px;border-radius:50%;object-fit:cover}
+    .comment-content{flex:1}
+    .comment-header{display:flex;gap:8px;align-items:center}
+    .comment-user{font-weight:600}
+    .comment-time{color:var(--muted);font-size:12px}
+    .comment-text{margin-top:4px}
+    .comment-actions{display:flex;gap:12px;margin-top:8px}
+    .comment-action{color:var(--muted);font-size:12px;cursor:pointer}
+    .comment-action:hover{color:var(--accent)}
+    /* Delete button styles removed */
+    .question-card{background:linear-gradient(135deg,#f8f9ff 0%,#eef4ff 100%);border-radius:12px;padding:20px;margin-bottom:16px;border:1px solid #dee6ff}
+    .question-card h3{margin-top:0;color:var(--accent)}
+    .search-form{display:flex;gap:8px;margin-bottom:24px}
+    .search-form input{flex:1;padding:12px;border:1px solid #e6eef9;border-radius:8px}
+    .user-card{display:flex;gap:12px;align-items:center;padding:16px;border-radius:12px;background:var(--card);box-shadow:0 2px 8px rgba(16,24,40,0.04);margin-bottom:12px}
+    .user-card img{width:48px;height:48px;border-radius:50%;object-fit:cover}
+    .user-info{flex:1}
+    .user-info h4{margin:0}
+    .user-role{color:var(--muted);font-size:14px}
+    .user-action{margin-left:8px}
+    footer{padding:14px 22px;color:var(--muted);text-align:center}
+    .sort-options{display:flex;gap:8px;margin-bottom:16px}
+    .sort-btn{background:#f0f0f0;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:14px}
+    .sort-btn.active{background:var(--accent);color:white}
+    .loading{display:flex;justify-content:center;align-items:center;padding:40px;color:var(--muted)}
+    .empty-state{text-align:center;padding:40px;color:var(--muted)}
+    .empty-state h3{color:#333}
+    .notification{position:fixed;top:80px;right:20px;background:#333;color:white;padding:16px 24px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15);z-index:1000;animation:slideIn 0.3s ease-out}
+    @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo"><img src="images/logo.jpg" alt="logo"></div>
+    <strong>Hobby Circle</strong>
+    <nav>
+      <a href="index.html">Home</a>
+      <a class="active" href="circles.html">Circles</a>
+      <a href="feed.html">Feed</a>
+      <a href="signup.html">Sign Up</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Circle Header -->
+    <section class="circle-header">
+      <img id="circleCover" src="images/cityphotography.jpg" alt="Circle Cover" class="circle-cover">
+      <div class="circle-info">
+        <img id="circleIcon" src="images/cityphotography.jpg" alt="Circle Icon" class="circle-icon">
+        <div class="circle-meta">
+          <h1 id="circleName">Photography</h1>
+          <div class="circle-stats">
+            <div class="stat"><span class="stat-number" id="membersCount">1.2k</span> members</div>
+            <div class="stat"><span class="stat-number" id="postsCount">42</span> posts</div>
+            <div class="stat"><span class="stat-number" id="activityLevel">High</span> activity</div>
+          </div>
+          <div class="circle-tags" id="circleTags">
+            <span>Photography</span>
+            <span>Digital</span>
+            <span>Art</span>
+            <span>Landscape</span>
+            <span>Portrait</span>
+          </div>
+          <div class="circle-actions">
+            <button id="joinButton" class="btn">Join Circle</button>
+            <button class="btn btn-secondary">Share</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Description Section -->
+    <section class="description-section">
+      <h2>About this Circle</h2>
+      <p id="circleDescription">
+        Welcome to the Photography Circle, a vibrant community for photography enthusiasts of all skill levels! Whether you're just starting out with a smartphone or you're a seasoned professional with high-end equipment, this is the perfect place to connect with like-minded individuals who share your passion for capturing the world through a lens.
+      </p>
+      <p>
+        Here you can:
+      </p>
+      <ul>
+        <li>Share your latest shots and get constructive feedback from fellow photographers</li>
+        <li>Exchange tips, techniques, and gear recommendations</li>
+        <li>Participate in weekly photography challenges and contests</li>
+        <li>Learn about composition, lighting, editing, and other essential skills</li>
+        <li>Discover new locations and inspiration for your next photoshoot</li>
+        <li>Connect with local photographers for meetups and collaborative projects</li>
+      </ul>
+      <p>
+        Our community values creativity, learning, and mutual respect. We encourage members to share their knowledge, ask questions, and support each other's growth as photographers. Whether you're interested in landscape, portrait, street, macro, wildlife, or any other genre of photography, you'll find a supportive audience here.
+      </p>
+    </section>
+
+    <!-- Tabs -->
+    <section class="tabs">
+      <div class="tab active" onclick="switchTab('posts')">Posts</div>
+      <div class="tab" onclick="switchTab('questions')">Questions</div>
+      <div class="tab" onclick="switchTab('members')">Members</div>
+    </section>
+
+    <!-- Posts Tab Content -->
+    <section id="posts" class="tab-content active">
+      <div class="search-form">
+        <input type="text" placeholder="Search posts...">
+        <button class="btn">Search</button>
+      </div>
+      
+      <div class="sort-options">
+        <div class="sort-btn active">Latest</div>
+        <div class="sort-btn">Popular</div>
+        <div class="sort-btn">Most Liked</div>
+      </div>
+
+      <!-- Post Card 1 -->
+      <div class="post-card">
+        <div class="post-header">
+          <img src="images/user1.jpg" alt="User" class="post-avatar">
+          <div>
+            <div class="post-user">Alex Morgan</div>
+            <div class="post-time">2 hours ago</div>
+          </div>
+        </div>
+        <div class="post-content">
+          <h3>Urban Photography Tips: Capturing City Life</h3>
+          <p>Here are some tips I've learned for urban photography that might help you capture better city shots:</p>
+          <ol>
+            <li>Look for interesting patterns in architecture</li>
+            <li>Use reflections in glass buildings for creative shots</li>
+            <li>Try shooting during "blue hour" for dramatic cityscapes</li>
+            <li>Don't forget the small details that tell a city's story</li>
+          </ol>
+          <p>What are your favorite urban photography techniques?</p>
+        </div>
+        <div class="post-actions">
+          <div class="post-action" onclick="likePost(this)">👍 <span>28</span> Likes</div>
+          <div class="post-action" onclick="showComments(this)">💬 <span>12</span> Comments</div>
+          <div class="post-action">🔄 Share</div>
+        </div>
+        
+        <!-- Comments Container -->
+        <div class="comments-container">
+          <div class="comment-form">
+            <textarea placeholder="Add a comment..." rows="2"></textarea>
+            <button class="btn" style="margin-top:8px" onclick="addComment(this)">Post Comment</button>
+          </div>
+          <div class="comments-toggle" onclick="toggleComments(this)">Show Comments (12)</div>
+          <div class="comments-list" style="display:none; max-height:300px; overflow-y:auto;">
+            <div class="comment">
+              <img src="images/user2.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Sarah Johnson</span>
+                  <span class="comment-time">1 hour ago</span>
+                </div>
+                <div class="comment-text">I love shooting during blue hour too! The lighting is perfect for capturing the city's energy.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user3.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Michael Chen</span>
+                  <span class="comment-time">45 minutes ago</span>
+                </div>
+                <div class="comment-text">Great tips! I'd add that shooting from different perspectives (like from above or below) can create really interesting urban photos.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user4.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Emma Davis</span>
+                  <span class="comment-time">30 minutes ago</span>
+                </div>
+                <div class="comment-text">What camera settings do you usually use for blue hour shots? I struggle with getting the right exposure.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user5.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">David Wilson</span>
+                  <span class="comment-time">25 minutes ago</span>
+                </div>
+                <div class="comment-text">Urban photography is my favorite! I love capturing the contrast between old and new architecture in cities.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user6.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Jessica Taylor</span>
+                  <span class="comment-time">20 minutes ago</span>
+                </div>
+                <div class="comment-text">Reflections are such a powerful technique! I've been experimenting with puddles after rain for some cool urban shots.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user7.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Robert Brown</span>
+                  <span class="comment-time">15 minutes ago</span>
+                </div>
+                <div class="comment-text">Thanks for sharing these tips! I'm heading to the city tomorrow and will definitely try the blue hour shooting.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user8.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Lisa Martinez</span>
+                  <span class="comment-time">12 minutes ago</span>
+                </div>
+                <div class="comment-text">I find that using a polarizing filter helps a lot with reducing glare from glass buildings. Highly recommend!</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user9.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Mark Anderson</span>
+                  <span class="comment-time">10 minutes ago</span>
+                </div>
+                <div class="comment-text">Do you have any recommendations for urban photography gear beyond the camera? Bags, tripods, etc.?</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user10.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Natalie Kim</span>
+                  <span class="comment-time">8 minutes ago</span>
+                </div>
+                <div class="comment-text">I love how urban photography captures the essence of city life. Those candid moments are priceless!</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user11.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Thomas Wright</span>
+                  <span class="comment-time">5 minutes ago</span>
+                </div>
+                <div class="comment-text">Great composition tips! I struggle with finding the right angles sometimes. This gives me some ideas.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user12.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Sophia Garcia</span>
+                  <span class="comment-time">3 minutes ago</span>
+                </div>
+                <div class="comment-text">Have you tried shooting at night with long exposures? The light trails from cars can create amazing effects!</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user13.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Daniel Thompson</span>
+                  <span class="comment-time">1 minute ago</span>
+                </div>
+                <div class="comment-text">These tips are spot on! I've been doing urban photography for years and these are all techniques that work.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            <!-- Additional comments to reach 31 total -->
+            <div class="comment">
+              <img src="images/user5.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Emma Johnson</span>
+                  <span class="comment-time">4 days ago</span>
+                </div>
+                <div class="comment-text">I'm really looking forward to seeing the winning photos! The street life theme was challenging but fun.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user6.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Robert Garcia</span>
+                  <span class="comment-time">5 days ago</span>
+                </div>
+                <div class="comment-text">Street photography is all about capturing those candid moments. I spent hours waiting for the perfect shot!</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user7.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Lisa Wong</span>
+                  <span class="comment-time">5 days ago</span>
+                </div>
+                <div class="comment-text">This challenge helped me get out of my comfort zone. I usually shoot landscapes, but street photography was a great change!</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user8.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Mark Wilson</span>
+                  <span class="comment-time">5 days ago</span>
+                </div>
+                <div class="comment-text">I love how diverse the entries were. Everyone had a unique perspective on street life!</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user9.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Natalie Smith</span>
+                  <span class="comment-time">5 days ago</span>
+                </div>
+                <div class="comment-text">My favorite part was exploring different neighborhoods and capturing the local culture. So many interesting characters!</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user10.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Thomas Johnson</span>
+                  <span class="comment-time">6 days ago</span>
+                </div>
+                <div class="comment-text">I found that shooting early in the morning gave me the best results. The light was perfect and the streets weren't too crowded.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user11.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Sophia Martinez</span>
+                  <span class="comment-time">6 days ago</span>
+                </div>
+                <div class="comment-text">I experimented with different angles and perspectives. Getting down low or shooting from above made for some interesting compositions!</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user15.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Sarah Thompson</span>
+                  <span class="comment-time">6 days ago</span>
+                </div>
+                <div class="comment-text">Street photography is challenging but rewarding. You have to be quick on your feet and ready to capture the moment!</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user16.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Daniel Thompson</span>
+                  <span class="comment-time">5 days ago</span>
+                </div>
+                <div class="comment-text">I've been experimenting with light painting techniques lately. It's a lot of fun and creates some really unique images!</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user17.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Olivia Davis</span>
+                  <span class="comment-time">5 days ago</span>
+                </div>
+                <div class="comment-text">Portrait photography is my passion! I love capturing people's emotions and personalities through the lens.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user18.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Ethan Wilson</span>
+                  <span class="comment-time">6 days ago</span>
+                </div>
+                <div class="comment-text">I'm getting into macro photography and it's fascinating to see the tiny details that we normally miss!</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user19.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Ava Johnson</span>
+                  <span class="comment-time">6 days ago</span>
+                </div>
+                <div class="comment-text">Landscape photography has helped me appreciate nature in a whole new way. Every sunrise and sunset is a new opportunity.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user20.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Noah Smith</span>
+                  <span class="comment-time">6 days ago</span>
+                </div>
+                <div class="comment-text">Street photography can be challenging but so rewarding! Capturing candid moments of everyday life is an art form.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user1.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Emma Davis</span>
+                  <span class="comment-time">7 days ago</span>
+                </div>
+                <div class="comment-text">My biggest tip for beginners: don't worry too much about gear. Focus on learning composition and understanding light.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user2.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Liam Wilson</span>
+                  <span class="comment-time">7 days ago</span>
+                </div>
+                <div class="comment-text">I've been using a drone for aerial photography and it's opened up a whole new perspective. The views are breathtaking!</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user3.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Sophia Martinez</span>
+                  <span class="comment-time">7 days ago</span>
+                </div>
+                <div class="comment-text">Composition is so important! The rule of thirds has dramatically improved my photos over time.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user4.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">William Johnson</span>
+                  <span class="comment-time">8 days ago</span>
+                </div>
+                <div class="comment-text">Understanding exposure triangle (aperture, shutter speed, ISO) was a game-changer for me. It gave me full control over my photos.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user5.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Mia Thompson</span>
+                  <span class="comment-time">8 days ago</span>
+                </div>
+                <div class="comment-text">I'm a big fan of black and white photography. It really forces you to focus on contrast, texture, and composition.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user6.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">James Davis</span>
+                  <span class="comment-time">8 days ago</span>
+                </div>
+                <div class="comment-text">Practice, practice, practice! I try to take my camera with me everywhere and take photos of everyday scenes.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user7.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Charlotte Wilson</span>
+                  <span class="comment-time">9 days ago</span>
+                </div>
+                <div class="comment-text">Learning to edit photos has been just as important as taking them. I'm still perfecting my workflow in Lightroom.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user8.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Benjamin Johnson</span>
+                  <span class="comment-time">9 days ago</span>
+                </div>
+                <div class="comment-text">Nature photography is so peaceful. Being out in the wilderness waiting for the perfect shot is therapeutic.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user9.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Amelia Smith</span>
+                  <span class="comment-time">9 days ago</span>
+                </div>
+                <div class="comment-text">I love capturing candid moments at events. Those unplanned shots often tell the best stories.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user10.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Elijah Davis</span>
+                  <span class="comment-time">10 days ago</span>
+                </div>
+                <div class="comment-text">Macro photography has taught me to appreciate the small things in life. The detail in a flower petal is incredible!</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user11.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Harper Wilson</span>
+                  <span class="comment-time">10 days ago</span>
+                </div>
+                <div class="comment-text">I'm still learning about lighting techniques. Natural light is beautiful, but I'm starting to experiment with flash.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user12.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Alexander Martinez</span>
+                  <span class="comment-time">10 days ago</span>
+                </div>
+                <div class="comment-text">Street photography requires patience and quick reflexes. I'm constantly working on improving both!</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            <button class="scroll-to-bottom" onclick="scrollToBottom(this)">▼</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Post Card 2 -->
+      <div class="post-card">
+        <div class="post-header">
+          <img src="images/user5.jpg" alt="User" class="post-avatar">
+          <div>
+            <div class="post-user">Emma Wilson</div>
+            <div class="post-time">Yesterday</div>
+          </div>
+        </div>
+        <div class="post-content">
+          <h3>My New Camera Setup</h3>
+          <p>I finally upgraded my gear! Just got the Sony A7R IV and I'm absolutely loving it. The image quality is incredible, especially in low light conditions.</p>
+          <p>Has anyone else used this camera? Any tips for getting the most out of it?</p>
+        </div>
+        <div class="post-actions">
+          <div class="post-action" onclick="likePost(this)">👍 <span>45</span> Likes</div>
+          <div class="post-action" onclick="showComments(this)">💬 <span>23</span> Comments</div>
+          <div class="post-action">🔄 Share</div>
+        </div>
+        
+        <!-- Comments Container -->
+        <div class="comments-container">
+          <div class="comment-form">
+            <textarea placeholder="Add a comment..." rows="2"></textarea>
+            <button class="btn" style="margin-top:8px" onclick="addComment(this)">Post Comment</button>
+          </div>
+          <div class="comments-toggle" onclick="toggleComments(this)">Show Comments (23)</div>
+          <div class="comments-list" style="display:none; max-height:300px; overflow-y:auto;">
+            <!-- Example comments -->
+            <div class="comment">
+              <img src="images/user6.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Jessica Taylor</span>
+                  <span class="comment-time">Yesterday</span>
+                </div>
+                <div class="comment-text">The Sony A7R IV is an amazing camera! I've been using it for landscapes and portraits - the dynamic range is incredible.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            <div class="comment">
+              <img src="images/user7.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Robert Garcia</span>
+                  <span class="comment-time">1 day ago</span>
+                </div>
+                <div class="comment-text">Try exploring the custom buttons - you can set up quick access to your most used functions. Also, the Eye AF is fantastic for portraits!</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            <div class="comment">
+              <img src="images/user8.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Lisa Wong</span>
+                  <span class="comment-time">1 day ago</span>
+                </div>
+                <div class="comment-text">Pro tip: Invest in good lenses if you haven't already. The camera body is excellent, but great glass will make a bigger difference in image quality.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            <div class="comment">
+              <img src="images/user9.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Mark Johnson</span>
+                  <span class="comment-time">2 days ago</span>
+                </div>
+                <div class="comment-text">I use this camera for wedding photography and it's been a game-changer. Battery life is impressive too!</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            <div class="comment">
+              <img src="images/user11.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Sophia Martinez</span>
+                  <span class="comment-time">2 days ago</span>
+                </div>
+                <div class="comment-text">Have you tried the silent shooting mode? It's perfect for events where you need to be discrete.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <!-- Additional comments to reach 23 total -->
+            <div class="comment">
+              <img src="images/user14.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Alex Turner</span>
+                  <span class="comment-time">3 days ago</span>
+                </div>
+                <div class="comment-text">The Sony A7R IV is definitely a powerhouse! I've been using it for astrophotography and the results are stunning.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user2.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Emma Johnson</span>
+                  <span class="comment-time">3 days ago</span>
+                </div>
+                <div class="comment-text">Don't forget to get a good SD card with fast write speeds - this camera produces large files!</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user3.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Michael Wilson</span>
+                  <span class="comment-time">3 days ago</span>
+                </div>
+                <div class="comment-text">The battery grip is a worthwhile investment if you plan on shooting all day or doing timelapse photography.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user4.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">David Taylor</span>
+                  <span class="comment-time">3 days ago</span>
+                </div>
+                <div class="comment-text">I upgraded from the A7R III and the autofocus improvements alone were worth it!</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user5.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Jessica Martinez</span>
+                  <span class="comment-time">4 days ago</span>
+                </div>
+                <div class="comment-text">Make sure to update the firmware - Sony has added some really useful features in recent updates.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user6.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Robert Thompson</span>
+                  <span class="comment-time">4 days ago</span>
+                </div>
+                <div class="comment-text">The dynamic range is incredible - I can pull details from shadows that I never could with my old camera.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user7.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Lisa Davis</span>
+                  <span class="comment-time">4 days ago</span>
+                </div>
+                <div class="comment-text">I recommend getting a good carrying bag that can accommodate the camera and multiple lenses comfortably.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user8.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Mark Wilson</span>
+                  <span class="comment-time">5 days ago</span>
+                </div>
+                <div class="comment-text">The image stabilization is fantastic - I can get sharp shots handheld at much slower shutter speeds now.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user9.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Natalie Smith</span>
+                  <span class="comment-time">5 days ago</span>
+                </div>
+                <div class="comment-text">If you're into video, the 4K capabilities are amazing. I use it for both photography and videography.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user10.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Thomas Johnson</span>
+                  <span class="comment-time">5 days ago</span>
+                </div>
+                <div class="comment-text">Take advantage of the customizable buttons - set them up for your most used functions to work faster.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user12.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Sophia Williams</span>
+                  <span class="comment-time">6 days ago</span>
+                </div>
+                <div class="comment-text">I find that using Sony's Imaging Edge software for tethered shooting works really well with this camera.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user13.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Daniel Davis</span>
+                  <span class="comment-time">6 days ago</span>
+                </div>
+                <div class="comment-text">The eye autofocus for animals is surprisingly good too - I've used it for pet photography with great results.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user1.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Alex Johnson</span>
+                  <span class="comment-time">6 days ago</span>
+                </div>
+                <div class="comment-text">Invest in good lenses first - the 24-70mm f/2.8 is a great all-around lens that pairs perfectly with this camera.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user2.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Emma Wilson</span>
+                  <span class="comment-time">7 days ago</span>
+                </div>
+                <div class="comment-text">The touchscreen is really intuitive - I love being able to tap to focus and then shoot right away.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user3.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Michael Davis</span>
+                  <span class="comment-time">7 days ago</span>
+                </div>
+                <div class="comment-text">Don't overlook the in-body image stabilization - it makes a huge difference when shooting handheld in low light.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user4.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">David Wilson</span>
+                  <span class="comment-time">7 days ago</span>
+                </div>
+                <div class="comment-text">I use this camera for weddings and it's been a game-changer. The buffer depth is impressive for continuous shooting.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user5.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Jessica Williams</span>
+                  <span class="comment-time">8 days ago</span>
+                </div>
+                <div class="comment-text">The weather sealing is excellent - I've used it in light rain without any issues.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user6.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Robert Johnson</span>
+                  <span class="comment-time">8 days ago</span>
+                </div>
+                <div class="comment-text">If you shoot raw, make sure you have plenty of storage space - each file can be 50MB or more!</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <img src="images/user7.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Lisa Wilson</span>
+                  <span class="comment-time">8 days ago</span>
+                </div>
+                <div class="comment-text">The electronic viewfinder is incredibly detailed - I can check focus and exposure with great accuracy.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            <button class="scroll-to-bottom" onclick="scrollToBottom(this)">▼</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Post Card 3 -->
+      <div class="post-card">
+        <div class="post-header">
+          <img src="images/user4.jpg" alt="User" class="post-avatar">
+          <div>
+            <div class="post-user">David Thompson</div>
+            <div class="post-time">3 days ago</div>
+          </div>
+        </div>
+        <div class="post-content">
+          <h3>Weekend Photography Challenge Results</h3>
+          <p>Thanks to everyone who participated in our "Street Life" photography challenge! We had so many amazing entries showcasing the diversity and energy of street photography.</p>
+          <p>Winners will be announced tomorrow. Stay tuned!</p>
+        </div>
+        <div class="post-actions">
+          <div class="post-action" onclick="likePost(this)">👍 <span>76</span> Likes</div>
+          <div class="post-action" onclick="showComments(this)">💬 <span>31</span> Comments</div>
+          <div class="post-action">🔄 Share</div>
+        </div>
+        
+        <!-- Comments Container -->
+        <div class="comments-container">
+          <div class="comment-form">
+            <textarea placeholder="Add a comment..." rows="2"></textarea>
+            <button class="btn" style="margin-top:8px" onclick="addComment(this)">Post Comment</button>
+          </div>
+          <div class="comments-toggle" onclick="toggleComments(this)">Show Comments (31)</div>
+          <div class="comments-list" style="display:none; max-height:300px; overflow-y:auto;">
+            <!-- Example comments -->
+            <div class="comment">
+              <img src="images/user12.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Emily Brown</span>
+                  <span class="comment-time">3 days ago</span>
+                </div>
+                <div class="comment-text">Excited to see the results! I submitted a few shots from downtown last weekend.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                </div>
+              </div>
+            </div>
+            <div class="comment">
+              <img src="images/user13.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Daniel Wilson</span>
+                  <span class="comment-time">3 days ago</span>
+                </div>
+                <div class="comment-text">I had so much fun with this challenge! Can't wait for the next one. Any hints about the theme?</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                </div>
+              </div>
+            </div>
+            <div class="comment">
+              <img src="images/user14.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Natalie Kim</span>
+                  <span class="comment-time">4 days ago</span>
+                </div>
+                <div class="comment-text">The participation was amazing this time around. So many creative perspectives!</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                </div>
+              </div>
+            </div>
+            <div class="comment">
+              <img src="images/user3.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Michael Chen</span>
+                  <span class="comment-time">4 days ago</span>
+                </div>
+                <div class="comment-text">This was my first challenge with the group - loved it! Learned so much from everyone's work.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                </div>
+              </div>
+            </div>
+            <div class="comment">
+              <img src="images/user4.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">David Thompson</span>
+                  <span class="comment-time">4 days ago</span>
+                </div>
+                <div class="comment-text">Thanks everyone for participating! We had over 100 entries this time, which is amazing. Judging has been tough!</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            <!-- New comment -->
+            <div class="comment">
+              <img src="images/user5.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Emma Johnson</span>
+                  <span class="comment-time">4 days ago</span>
+                </div>
+                <div class="comment-text">Street photography is so challenging but rewarding. I'm excited to see everyone's work!</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                </div>
+              </div>
+            </div>
+            <div class="comment">
+              <img src="images/user6.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Robert Wilson</span>
+                  <span class="comment-time">5 days ago</span>
+                </div>
+                <div class="comment-text">I hope my submission makes it! I focused on candid moments in the city park.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                </div>
+              </div>
+            </div>
+            <div class="comment">
+              <img src="images/user7.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Lisa Davis</span>
+                  <span class="comment-time">5 days ago</span>
+                </div>
+                <div class="comment-text">The diversity of entries must be incredible. Can't wait for the announcement!</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                </div>
+              </div>
+            </div>
+            <div class="comment">
+              <img src="images/user8.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">James Martinez</span>
+                  <span class="comment-time">5 days ago</span>
+                </div>
+                <div class="comment-text">This challenge really pushed me out of my comfort zone. Great experience!</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                </div>
+              </div>
+            </div>
+            <div class="comment">
+              <img src="images/user9.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Sophia Anderson</span>
+                  <span class="comment-time">6 days ago</span>
+                </div>
+                <div class="comment-text">Street life is such a rich subject - every corner tells a story!</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                </div>
+              </div>
+            </div>
+            <div class="comment">
+              <img src="images/user10.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">You</span>
+                  <span class="comment-time">6 days ago</span>
+                </div>
+                <div class="comment-text">I submitted three photos from different neighborhoods. Fingers crossed!</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                  
+                </div>
+              </div>
+            </div>
+            <div class="comment">
+              <img src="images/user1.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Alexander Thomas</span>
+                  <span class="comment-time">6 days ago</span>
+                </div>
+                <div class="comment-text">100 entries is impressive! The community is really growing.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                </div>
+              </div>
+            </div>
+            <div class="comment">
+              <img src="images/user2.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Olivia Jackson</span>
+                  <span class="comment-time">7 days ago</span>
+                </div>
+                <div class="comment-text">I tried a new perspective this time - shooting from low angles. Hope it stands out!</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                </div>
+              </div>
+            </div>
+            <div class="comment">
+              <img src="images/user3.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Ethan White</span>
+                  <span class="comment-time">7 days ago</span>
+                </div>
+                <div class="comment-text">Street photography teaches you to see the beauty in everyday moments.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                </div>
+              </div>
+            </div>
+            <div class="comment">
+              <img src="images/user4.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Charlotte Lee</span>
+                  <span class="comment-time">7 days ago</span>
+                </div>
+                <div class="comment-text">Can't wait to see the winning shots! Maybe next time I'll participate too.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                </div>
+              </div>
+            </div>
+            <div class="comment">
+              <img src="images/user5.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Benjamin Harris</span>
+                  <span class="comment-time">7 days ago</span>
+                </div>
+                <div class="comment-text">The judging process must be really difficult with so many good entries!</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                </div>
+              </div>
+            </div>
+            <div class="comment">
+              <img src="images/user6.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Ava Clark</span>
+                  <span class="comment-time">8 days ago</span>
+                </div>
+                <div class="comment-text">I love how street photography captures authentic human moments.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                </div>
+              </div>
+            </div>
+            <div class="comment">
+              <img src="images/user7.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">William Rodriguez</span>
+                  <span class="comment-time">8 days ago</span>
+                </div>
+                <div class="comment-text">Great turnout for this challenge! The community is really engaged.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                </div>
+              </div>
+            </div>
+            <div class="comment">
+              <img src="images/user8.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Mia Lewis</span>
+                  <span class="comment-time">8 days ago</span>
+                </div>
+                <div class="comment-text">Street life is so dynamic - every shot tells a different story.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                </div>
+              </div>
+            </div>
+            <div class="comment">
+              <img src="images/user9.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">James Walker</span>
+                  <span class="comment-time">9 days ago</span>
+                </div>
+                <div class="comment-text">I'm new to street photography but loved participating. Learned a lot!</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                </div>
+              </div>
+            </div>
+            <div class="comment">
+              <img src="images/user10.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Amelia Hall</span>
+                  <span class="comment-time">9 days ago</span>
+                </div>
+                <div class="comment-text">The challenge really encouraged me to get out and practice more.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                </div>
+              </div>
+            </div>
+            <div class="comment">
+              <img src="images/user11.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Lucas Young</span>
+                  <span class="comment-time">9 days ago</span>
+                </div>
+                <div class="comment-text">Can't wait to see the winners! Maybe I'll join the next challenge too.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                </div>
+              </div>
+            </div>
+            <div class="comment">
+              <img src="images/user12.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Harper Allen</span>
+                  <span class="comment-time">10 days ago</span>
+                </div>
+                <div class="comment-text">Street photography requires so much patience and quick reflexes!</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                </div>
+              </div>
+            </div>
+            <div class="comment">
+              <img src="images/user13.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Ethan King</span>
+                  <span class="comment-time">10 days ago</span>
+                </div>
+                <div class="comment-text">I hope there's a gallery showing of the winners somewhere!</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                </div>
+              </div>
+            </div>
+            <div class="comment">
+              <img src="images/user14.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">Alexander Martinez</span>
+                  <span class="comment-time">10 days ago</span>
+                </div>
+                <div class="comment-text">This challenge was a great way to connect with other photographers in the community.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">Like</span>
+                </div>
+              </div>
+            </div>
+            <button class="scroll-to-bottom" onclick="scrollToBottom(this)">▼</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Questions Tab Content -->
+    <section id="questions" class="tab-content">
+      <div class="search-form">
+        <input type="text" placeholder="Search questions...">
+        <button class="btn">Search</button>
+      </div>
+      
+      <button class="btn" style="margin-bottom:24px">Ask a Question</button>
+
+      <!-- Question Card 1 -->
+      <div class="question-card">
+        <div class="post-header">
+          <img src="images/user7.jpg" alt="User" class="post-avatar">
+          <div>
+            <h3>What's the best lens for portrait photography on a budget?</h3>
+            <p><strong>Asked by:</strong> Olivia Parker · 2 days ago</p>
+          </div>
+        </div>
+        <p>I'm looking to upgrade my portrait photography setup without breaking the bank. Can anyone recommend some affordable lenses that still produce great results?</p>
+        <div class="post-actions">
+          <div class="post-action">👍 <span>8</span> Helpful</div>
+          <div class="post-action" onclick="showComments(this)">💬 <span>14</span> Answers</div>
+        </div>
+        
+        <!-- Answers Container -->
+        <div class="comments-container">
+          <div class="comment-form">
+            <textarea placeholder="Write your answer..." rows="3"></textarea>
+            <button class="btn" style="margin-top:8px" onclick="addComment(this)">Post Answer</button>
+          </div>
+          <div class="comments-toggle" onclick="toggleComments(this)">Show Answers (1)</div>
+          <div class="comments-list" style="display:none; max-height:300px; overflow-y:auto;">
+            <div class="comment">
+              <img src="images/user8.jpg" alt="User" class="comment-avatar">
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">James Rodriguez</span>
+                  <span class="comment-time">1 day ago</span>
+                </div>
+                <div class="comment-text">For budget portrait lenses, I'd recommend the 50mm f/1.8 prime lenses from any major brand. They're often called "nifty fifties" and provide excellent image quality at an affordable price point. They create beautiful bokeh and work well in various lighting conditions.</div>
+                <div class="comment-actions">
+                  <span class="comment-action">👍 5</span>
+                </div>
+              </div>
+            </div>
+            <button class="scroll-to-bottom" onclick="scrollToBottom(this)">▼</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Question Card 2 -->
+      <div class="question-card">
+        <div class="post-header">
+          <img src="images/user9.jpg" alt="User" class="post-avatar">
+          <div>
+            <h3>How do you handle difficult lighting situations?</h3>
+            <p><strong>Asked by:</strong> Benjamin Lee · 4 days ago</p>
+          </div>
+        </div>
+        <p>I struggle with high contrast scenes, especially when shooting outdoors. Any tips for balancing exposure and getting detail in both shadows and highlights?</p>
+        <div class="post-actions">
+          <div class="post-action">👍 <span>12</span> Helpful</div>
+          <div class="post-action" onclick="showComments(this)">💬 <span>9</span> Answers</div>
+        </div>
+        
+        <!-- Answers Container -->
+        <div class="comments-container">
+          <div class="comment-form">
+            <textarea placeholder="Write your answer..." rows="3"></textarea>
+            <button class="btn" style="margin-top:8px" onclick="addComment(this)">Post Answer</button>
+          </div>
+          <div class="comments-toggle" onclick="toggleComments(this)">Show Answers (9)</div>
+          <div class="comments-list" style="display:none; max-height:300px; overflow-y:auto;">
+            <!-- Answers will be added here dynamically -->
+            <button class="scroll-to-bottom" onclick="scrollToBottom(this)">▼</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Question Card 3 -->
+      <div class="question-card">
+        <div class="post-header">
+          <img src="images/user11.jpg" alt="User" class="post-avatar">
+          <div>
+            <h3>Best editing software for beginners?</h3>
+            <p><strong>Asked by:</strong> Charlotte Young · 1 week ago</p>
+          </div>
+        </div>
+        <p>I'm just starting to get into photo editing. What software would you recommend that's user-friendly but still powerful enough for good results?</p>
+        <div class="post-actions">
+          <div class="post-action">👍 <span>15</span> Helpful</div>
+          <div class="post-action" onclick="showComments(this)">💬 <span>21</span> Answers</div>
+        </div>
+        
+        <!-- Answers Container -->
+        <div class="comments-container">
+          <div class="comment-form">
+            <textarea placeholder="Write your answer..." rows="3"></textarea>
+            <button class="btn" style="margin-top:8px" onclick="addComment(this)">Post Answer</button>
+          </div>
+          <div class="comments-toggle" onclick="toggleComments(this)">Show Answers (21)</div>
+          <div class="comments-list" style="display:none; max-height:300px; overflow-y:auto;">
+            <!-- Answers will be added here dynamically -->
+            <button class="scroll-to-bottom" onclick="scrollToBottom(this)">▼</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Members Tab Content -->
+    <section id="members" class="tab-content">
+      <div class="search-form">
+        <input type="text" placeholder="Search members...">
+        <button class="btn">Search</button>
+      </div>
+      
+      <div class="sort-options">
+        <div class="sort-btn active">Most Active</div>
+        <div class="sort-btn">Newest</div>
+        <div class="sort-btn">Alphabetical</div>
+      </div>
+
+      <!-- Member List -->
+      <div class="user-card">
+        <img src="images/user6.jpg" alt="Admin">
+        <div class="user-info">
+          <h4>Jessica Miller</h4>
+          <div class="user-role">Circle Admin</div>
+        </div>
+        <button class="btn btn-secondary user-action">Message</button>
+      </div>
+      
+      <div class="user-card">
+        <img src="images/user1.jpg" alt="User">
+        <div class="user-info">
+          <h4>Alex Morgan</h4>
+          <div class="user-role">Active Member</div>
+        </div>
+        <button class="btn btn-secondary user-action">Message</button>
+      </div>
+      
+      <div class="user-card">
+        <img src="images/user2.jpg" alt="User">
+        <div class="user-info">
+          <h4>Sarah Johnson</h4>
+          <div class="user-role">Active Member</div>
+        </div>
+        <button class="btn btn-secondary user-action">Message</button>
+      </div>
+      
+      <div class="user-card">
+        <img src="images/user3.jpg" alt="User">
+        <div class="user-info">
+          <h4>Michael Chen</h4>
+          <div class="user-role">Member</div>
+        </div>
+        <button class="btn btn-secondary user-action">Message</button>
+      </div>
+      
+      <div class="user-card">
+        <img src="images/user5.jpg" alt="User">
+        <div class="user-info">
+          <h4>Emma Wilson</h4>
+          <div class="user-role">Member</div>
+        </div>
+        <button class="btn btn-secondary user-action">Message</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>© 2025 Hobby Circle �?Connect with Your Passion</footer>
+
+  <script>
+    // Comment like functionality
+    function likeComment(element) {
+      const countEl = element.querySelector('.like-count');
+      let likes = parseInt(element.getAttribute('data-likes') || '0', 10);
+      const liked = element.classList.toggle('liked');
+      
+      if (liked) {
+        likes += 1;
+        element.style.color = 'red';
+      } else {
+        likes = Math.max(0, likes - 1);
+        element.style.color = '';
+      }
+      
+      element.setAttribute('data-likes', likes);
+      countEl.textContent = likes;
+    }
+    
+    // Global variable - Current circle data
+    let currentCircle = {
+      id: 'circle_photography',
+      name: 'Photography',
+      description: 'Welcome to the Photography Circle...',
+      tags: ['Photography', 'Digital', 'Art', 'Landscape', 'Portrait'],
+      members: 1200,
+      posts: 42,
+      icon: 'images/cityphotography.jpg',
+      cover: 'images/cityphotography.jpg',
+      isMember: false
+    };
+
+    // Get URL parameters
+    function getUrlParams() {
+      const params = {};
+      const queryString = window.location.search.substring(1);
+      const pairs = queryString.split('&');
+      for (let i = 0; i < pairs.length; i++) {
+        const pair = pairs[i].split('=');
+        params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+      }
+      return params;
+    }
+
+    // Initialize page
+function initPage() {
+      const params = getUrlParams();
+      if (params.circleId) {
+        loadCircleData(params.circleId);
+      }
+      
+      // Set join button event
+      document.getElementById('joinButton').addEventListener('click', toggleJoinCircle);
+      
+      // Initialize sort buttons
+      document.querySelectorAll('.sort-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const parent = this.parentElement;
+          parent.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+      
+      // Add like functionality to all comments and ensure they have avatar
+      setTimeout(() => {
+        document.querySelectorAll('.comment').forEach(comment => {
+          // Ensure avatar exists
+          const avatar = comment.querySelector('.comment-avatar');
+          if (avatar && (!avatar.src || avatar.src === '' || avatar.src.includes('undefined'))) {
+            avatar.src = 'images/user1.jpg'; // 默认头像
+          }
+          
+          // Add like functionality
+          const actions = comment.querySelector('.comment-actions');
+          if (actions) {
+            const likeAction = actions.querySelector('.comment-action:first-child');
+            if (likeAction && likeAction.textContent.trim() === 'Like') {
+              // For comments with delete button
+              if (actions.querySelector('.delete')) {
+                likeAction.outerHTML = '<span class="comment-action like-action" onclick="likeComment(this)" data-likes="0">❤ <span class="like-count">0</span></span>';
+              } else {
+                likeAction.outerHTML = '<span class="comment-action like-action" onclick="likeComment(this)" data-likes="0">❤ <span class="like-count">0</span></span>';
+              }
+            }
+          } else {
+            // If no actions container, create one
+            const content = comment.querySelector('.comment-content');
+            if (content) {
+              const newActions = document.createElement('div');
+              newActions.className = 'comment-actions';
+              newActions.innerHTML = '<span class="comment-action like-action" onclick="likeComment(this)" data-likes="0">❤ <span class="like-count">0</span></span>';
+              content.appendChild(newActions);
+            }
+          }
+        });
+      }, 100);
+    }
+
+    // Load circle data (simulation)
+    function loadCircleData(circleId) {
+      // Simulate loading different circle data based on ID
+      const circles = {
+        'circle_photography': {
+          id: 'circle_photography',
+          name: 'Photography',
+          description: 'Welcome to the Photography Circle, a vibrant community for photography enthusiasts...',
+          tags: ['Photography', 'Digital', 'Art', 'Landscape', 'Portrait'],
+          members: 1200,
+          posts: 42,
+          icon: 'images/cityphotography.jpg',
+          cover: 'images/cityphotography.jpg'
+        },
+        'circle_reading': {
+          id: 'circle_reading',
+          name: 'Reading Club',
+          description: 'Join our vibrant book club for literary discussions, author spotlights, and recommendations...',
+          tags: ['Books', 'Reading', 'Literature', 'Fiction', 'Non-fiction'],
+          members: 860,
+          posts: 56,
+          icon: 'images/reading club.jpg',
+          cover: 'images/reading club.jpg'
+        },
+        'circle_bakery': {
+          id: 'circle_bakery',
+          name: 'Bakery',
+          description: 'Discover delicious recipes, baking techniques, and share your sweet creations...',
+          tags: ['Food', 'Baking', 'Recipes', 'Desserts', 'Cooking'],
+          members: 410,
+          posts: 28,
+          icon: 'images/backery.jpg',
+          cover: 'images/backery.jpg'
+        },
+        'circle_music': {
+          id: 'circle_music',
+          name: 'Music',
+          description: 'Share your favorite tracks, playlists, and music tips with fellow music lovers...',
+          tags: ['Music', 'Songs', 'Playlists', 'Instruments', 'Production'],
+          members: 540,
+          posts: 78,
+          icon: 'images/music.jpg',
+          cover: 'images/music.jpg'
+        },
+        'circle_movies': {
+          id: 'circle_movies',
+          name: 'Movies',
+          description: 'Discuss films, share reviews, and discover new movies with our community...',
+          tags: ['Movies', 'Films', 'Reviews', 'Cinematic', 'Entertainment'],
+          members: 680,
+          posts: 63,
+          icon: 'images/movie.jpg',
+          cover: 'images/movie.jpg'
+        }
+      };
+
+      if (circles[circleId]) {
+        currentCircle = { ...circles[circleId], isMember: false };
+        updateCircleDisplay();
+      }
+    }
+
+    // Update circle display
+    function updateCircleDisplay() {
+      document.getElementById('circleName').textContent = currentCircle.name;
+      document.getElementById('circleDescription').textContent = currentCircle.description;
+      document.getElementById('circleIcon').src = currentCircle.icon;
+      document.getElementById('circleIcon').alt = currentCircle.name;
+      document.getElementById('circleCover').src = currentCircle.cover;
+      document.getElementById('circleCover').alt = currentCircle.name + ' Cover';
+      document.getElementById('membersCount').textContent = formatNumber(currentCircle.members);
+      document.getElementById('postsCount').textContent = currentCircle.posts;
+      
+      // Update tags
+      const tagsContainer = document.getElementById('circleTags');
+      tagsContainer.innerHTML = '';
+      currentCircle.tags.forEach(tag => {
+        const tagSpan = document.createElement('span');
+        tagSpan.textContent = tag;
+        tagsContainer.appendChild(tagSpan);
+      });
+      
+      // Update join button
+      updateJoinButton();
+    }
+
+    // Toggle join/leave circle
+    function toggleJoinCircle() {
+      currentCircle.isMember = !currentCircle.isMember;
+      currentCircle.members += currentCircle.isMember ? 1 : -1;
+      updateJoinButton();
+      document.getElementById('membersCount').textContent = formatNumber(currentCircle.members);
+      showNotification(currentCircle.isMember ? 'Successfully joined the circle!' : 'You have left the circle.');
+    }
+
+    // Update join button state
+    function updateJoinButton() {
+      const button = document.getElementById('joinButton');
+      if (currentCircle.isMember) {
+        button.textContent = 'Joined';
+        button.classList.add('btn-joined');
+      } else {
+        button.textContent = 'Join Circle';
+        button.classList.remove('btn-joined');
+      }
+    }
+
+    // Switch tabs
+    function switchTab(tabId) {
+      // Hide all content
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      
+      // Remove active state from all tabs
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Show selected content and tab
+      document.getElementById(tabId).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    // Like post
+    function likePost(element) {
+      const likeCount = element.querySelector('span');
+      let count = parseInt(likeCount.textContent);
+      const isLiked = element.classList.toggle('liked');
+      
+      if (isLiked) {
+        count++;
+        element.style.color = '#d23f3f';
+      } else {
+        count--;
+        element.style.color = '';
+      }
+      
+      likeCount.textContent = count;
+    }
+
+    // Show/hide comments
+    function showComments(element) {
+      const postCard = element.closest('.post-card, .question-card');
+      const commentsToggle = postCard.querySelector('.comments-toggle');
+      const commentCount = element.querySelector('span').textContent;
+      
+      if (commentsToggle) {
+        // Update comment toggle button count to match post display        commentsToggle.textContent = `Show Comments (${commentCount})`;
+        toggleComments(commentsToggle);
+      }
+    }
+    
+    // Toggle comment display/hide
+    function toggleComments(element) {
+      const commentsList = element.nextElementSibling;
+      const commentCount = element.textContent.match(/\d+/)[0];
+      
+      if (commentsList.style.display === 'none' || !commentsList.style.display) {
+        // Ensure comments list has correct style settings
+        commentsList.style.maxHeight = '300px';
+        commentsList.style.overflowY = 'auto';
+        commentsList.style.display = 'block';
+        commentsList.style.opacity = '0';
+        commentsList.style.transform = 'translateY(-10px)';
+        commentsList.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+        
+        // Apply animation after triggering layout
+        setTimeout(() => {
+          commentsList.style.opacity = '1';
+          commentsList.style.transform = 'translateY(0)';
+        }, 10);
+        
+        element.textContent = 'Hide Comments';
+        element.classList.add('active');
+      } else {
+        // Add collapse animation
+        commentsList.style.opacity = '0';
+        commentsList.style.transform = 'translateY(-10px)';
+        
+        setTimeout(() => {
+          commentsList.style.display = 'none';
+        }, 300);
+        
+        element.textContent = `Show Comments (${commentCount})`;
+        element.classList.remove('active');
+      }
+    }
+    
+    // Scroll to bottom function
+    function scrollToBottom(button) {
+      const commentsList = button.closest('.comments-list');
+      
+      if (commentsList) {
+        // Scroll to bottom immediately
+        commentsList.scrollTop = commentsList.scrollHeight;
+        
+        // Visual feedback
+        button.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+          button.style.transform = 'scale(1)';
+        }, 150);
+      }
+    }
+
+    // Add comment
+    function addComment(button) {
+      const textarea = button.parentElement.querySelector('textarea');
+      const commentText = textarea.value.trim();
+      
+      if (!commentText) {
+        showNotification('Please enter a comment!', 'error');
+        return;
+      }
+      
+      const commentsContainer = button.closest('.comments-container');
+      const postCard = button.closest('.post-card, .question-card');
+      const commentCount = postCard.querySelector('.post-action span');
+      let count = parseInt(commentCount.textContent);
+      
+      // Create new comment
+      const newComment = document.createElement('div');
+      newComment.className = 'comment';
+      newComment.innerHTML = `
+        <img src="images/user10.jpg" alt="You" class="comment-avatar">
+        <div class="comment-content">
+          <div class="comment-header">
+            <span class="comment-user">You</span>
+            <span class="comment-time">Just now</span>
+          </div>
+          <div class="comment-text">${escapeHTML(commentText)}</div>
+          <div class="comment-actions">
+            <span class="comment-action">Like</span>
+          </div>
+        </div>
+      `;
+      
+      // Insert new comment into comments list
+      const commentsList = commentsContainer.querySelector('.comments-list');
+      const commentForm = commentsContainer.querySelector('.comment-form');
+      
+      // If comments list is hidden, show it first
+      if (commentsList.style.display === 'none' || !commentsList.style.display) {
+        const commentsToggle = commentsContainer.querySelector('.comments-toggle');
+        if (commentsToggle) {
+          toggleComments(commentsToggle);
+        }
+      }
+      
+      // Add new comment to beginning of list
+      commentsList.insertBefore(newComment, commentsList.firstChild);
+      
+      // Scroll to newly added comment
+      commentsList.scrollTop = 0;
+      
+      // Update comment count
+      count++;
+      commentCount.textContent = count;
+      
+      // Clear textarea
+      textarea.value = '';
+      
+      // Show notification
+      showNotification('Comment posted successfully!');
+    }
+
+    // Note: Delete comment functionality has been removed to keep the user interface clean
+    // Show notification
+    function showNotification(message, type = 'success') {
+      const notification = document.createElement('div');
+      notification.className = 'notification';
+      notification.textContent = message;
+      
+      if (type === 'error') {
+        notification.style.background = '#dc3545';
+      }
+      
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.style.opacity = '0';
+        notification.style.transition = 'opacity 0.5s';
+        setTimeout(() => {
+          document.body.removeChild(notification);
+        }, 500);
+      }, 3000);
+    }
+
+    // Utility function: Format number
+    function formatNumber(n) {
+      if(n >= 1000) return (n/1000).toFixed(n >= 10000 ? 0 : 1) + 'k'; 
+      return n + '';
+    }
+
+    // Utility function: Escape HTML
+    function escapeHTML(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', initPage);
+  </script>
+</body>
+</html>

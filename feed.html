@@ -9,10 +9,53 @@
     body{margin:0;font-family:Inter,Segoe UI,Helvetica,Arial;background:var(--bg);color:#111}
     header{background:linear-gradient(90deg,#fff 0%,rgba(255,255,255,0.8) 100%);padding:14px 22px;display:flex;align-items:center;gap:14px}
     nav{margin-left:auto;display:flex;gap:12px}
-    main{padding:18px 22px}
-    .post{background:var(--card);padding:14px;border-radius:10px;box-shadow:0 6px 18px rgba(16,24,40,0.04);margin-bottom:14px}
-    .post img{max-width:100%;border-radius:8px;margin-top:8px}
+    main{padding:18px 22px;padding-bottom:80px}
+    .post{background:var(--card);padding:12px;border-radius:10px;box-shadow:0 4px 12px rgba(16,24,40,0.04);margin-bottom:16px;max-width:800px;margin-left:auto;margin-right:auto;position:relative}
+    .feed-header{max-width:800px;margin-left:auto;margin-right:auto;margin-bottom:24px}
+    .feed-nav{display:flex;gap:12px;margin-top:16px;background:white;padding:6px;border-radius:8px;box-shadow:0 2px 8px rgba(16,24,40,0.04)}
+    .nav-btn{flex:1;padding:10px 16px;border:none;background:transparent;color:var(--muted);border-radius:6px;cursor:pointer;transition:all 0.2s ease}
+    .nav-btn:hover{background:var(--bg)}
+    .nav-btn.active{background:var(--accent);color:white}
+    .feed-content{max-width:800px;margin-left:auto;margin-right:auto}
+    .feed-tab{display:none}
+    .feed-tab.active{display:block}
+    .feed-tab h3{color:#333;margin-bottom:16px}
+    .post img{max-width:100%;height:auto;border-radius:8px;margin-top:8px;display:block}
     .btn{background:var(--accent);color:#fff;padding:8px 12px;border-radius:8px;text-decoration:none}
+    /* 搜索栏样式 */
+    .search-container{max-width:800px;margin:0 auto 20px auto;position:relative}
+    .search-input{width:100%;padding:12px 16px 12px 40px;border:1px solid #e6eef9;border-radius:8px;font-size:14px;background:white;box-shadow:0 2px 8px rgba(16,24,40,0.04);transition:border-color 0.2s ease}
+    .search-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(43,140,255,0.1)}
+    .search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted)}
+    /* 下拉刷新样式 */
+    .pull-refresh{display:flex;justify-content:center;align-items:center;height:0;overflow:hidden;transition:height 0.3s ease}
+    .pull-refresh.active{height:50px}
+    .refresh-icon{font-size:20px;color:var(--accent);transition:transform 0.3s ease}
+    .refresh-icon.spinning{animation:spin 1s linear infinite}
+    @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+    /* 收藏按钮样式 */
+    .favorite-btn{position:absolute;top:12px;right:12px;background:transparent;border:none;font-size:20px;cursor:pointer;color:var(--muted);transition:all 0.2s ease;padding:4px}
+    .favorite-btn:hover{transform:scale(1.1)}
+    .favorite-btn.favorited{color:#ffd700}
+    /* 底部消息栏样式 */
+    .message-bar{position:fixed;bottom:0;left:0;right:0;background:white;display:flex;align-items:center;justify-content:space-around;padding:12px 22px;border-top:1px solid #e6eef9;box-shadow:0 -2px 10px rgba(0,0,0,0.05);z-index:100}
+    .message-icon{position:relative}
+    .message-icon .badge{position:absolute;top:-8px;right:-8px;background:#ff4757;color:white;font-size:12px;padding:2px 6px;border-radius:50%;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center}
+    .message-item{display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:8px;cursor:pointer;transition:background-color 0.2s ease}
+    .message-item:hover{background:var(--bg)}
+    /* 创建帖子按钮样式 */
+    .create-post-btn{position:fixed;bottom:80px;right:22px;background:var(--accent);color:white;border:none;width:56px;height:56px;border-radius:50%;font-size:24px;cursor:pointer;box-shadow:0 4px 12px rgba(43,140,255,0.3);transition:all 0.2s ease}
+    .create-post-btn:hover{transform:scale(1.1);background:#1a6fe0}
+    .create-post-btn:active{transform:scale(0.95)}
+    /* 创建帖子模态框样式 */
+    .modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center}
+    .modal-content{background:white;padding:24px;border-radius:12px;max-width:600px;width:90%;max-height:80vh;overflow-y:auto}
+    .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+    .modal-close{background:none;border:none;font-size:24px;cursor:pointer}
+    .modal-body textarea{width:100%;padding:12px;border:1px solid #e6eef9;border-radius:8px;font-size:14px;resize:vertical;min-height:120px}
+    .modal-footer{display:flex;justify-content:flex-end;gap:12px;margin-top:20px}
+    .btn-secondary{background:#f3f4f6;color:#374151}
+    .btn-secondary:hover{background:#e5e7eb}
     .post-actions {
   display: flex;
   justify-content: flex-end;
@@ -183,9 +226,35 @@
   </header>
 
   <main>
-    <h2>Community Feed (demo)</h2>
+      <!-- 下拉刷新区域 -->
+      <div id="pull-refresh" class="pull-refresh">
+        <span id="refresh-icon" class="refresh-icon">🔄</span>
+      </div>
+      
+      <!-- 搜索栏 -->
+      <div class="search-container">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-input" class="search-input" placeholder="Search posts, users or topics...">
+      </div>
+      
+      <div class="feed-header">
+        <h2>Feed</h2>
+      <div class="feed-nav">
+        <button class="nav-btn active" data-tab="following">Following</button>
+        <button class="nav-btn" data-tab="discover">Discover</button>
+        <button class="nav-btn" data-tab="nearby">Nearby Posts</button>
+      </div>
+    </div>
+    
+    <div class="feed-content">
+      <div id="following-tab" class="feed-tab active">
+        <h3>Following Content</h3>
     <section class="post">
-      <strong>Alice</strong> <small style="color:var(--muted)">in Bakery · 2h</small>
+      <button class="favorite-btn" data-post-id="post-1">☆</button>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <img src="images/user2.jpg" alt="Alice" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+        <strong>Alice</strong> <small style="color:var(--muted)">in Bakery · 2h</small>
+      </div>
       <p>Just tried a new sourdough recipe — came out great!</p>
       <img src="images/sourdough.jpg" alt="sourdough">
       <div class="post-actions">
@@ -254,7 +323,11 @@
     </section>
 
     <section class="post">
-      <strong>Bob</strong> <small style="color:var(--muted)">in Photography · 6h</small>
+      <button class="favorite-btn" data-post-id="post-2">☆</button>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <img src="images/user1.jpg" alt="Bob" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+        <strong>Bob</strong> <small style="color:var(--muted)">in Photography · 6h</small>
+      </div>
       <p>Golden hour photos from last weekend.</p>
       <img src="images/cityphotography.jpg" alt="golden hour">
       <div class="post-actions">
@@ -264,13 +337,13 @@
           </button>
         <div class="comment-count" data-post-id="2">
             <span class="comment-icon">💬</span>
-            <span class="count">47</span>
+            <span class="count">11</span>
           </div>
       </div>
       <div class="comment-section">
           <input type="text" class="comment-input" placeholder="Add a comment..." data-post-id="2">
             <button class="comment-submit" data-post-id="2">Post Comment</button>
-            <div class="comments-toggle" data-post-id="2">Show Comments (47)</div>
+            <div class="comments-toggle" data-post-id="2">Show Comments (11)</div>
             <div class="comments-list" data-post-id="2" style="display: none;">
               <!-- 评论内容 - 添加更多评论以确保滚动条出现 -->
               <div class="comment-item">
@@ -321,192 +394,1365 @@
           </div>
         </div>
     </section>
-
+      </div>
+      
+      <div id="discover-tab" class="feed-tab">
+        <h3>Discover New Content</h3>
+        <!-- 这里将通过JavaScript动态添加推荐内容 -->
+      </div>
+      
+      <div id="nearby-tab" class="feed-tab">
+        <h3>Nearby Posts</h3>
+        <section class="post">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <img src="images/user3.jpg" alt="Local Baker" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+            <strong>Local Baker</strong> <small style="color:var(--muted)">in Bakery · 1h · 500m away</small>
+          </div>
+          <p>Fresh bread available at our pop-up shop today!</p>
+          <img src="images/bakeryshop.jpg" alt="bakery shop">
+          <div class="post-actions">
+              <button class="like-btn" data-post-id="3">
+                <span class="heart-icon">❤</span>
+                <span class="like-count">24</span>
+              </button>
+            <div class="comment-count" data-post-id="3">
+                <span class="comment-icon">💬</span>
+                <span class="count">8</span>
+              </div>
+          </div>
+          <div class="comment-section">
+              <input type="text" class="comment-input" placeholder="Add a comment..." data-post-id="3">
+                <button class="comment-submit" data-post-id="3">Post Comment</button>
+                <div class="comments-toggle" data-post-id="3">Show Comments (8)</div>
+                <div class="comments-list" data-post-id="3" style="display: none;">
+                  <!-- 评论内容 -->
+                  <div class="comment-item">
+                    <span class="comment-user">Local Fan:</span>
+                    <span class="comment-content">I'll be there! What time?</span>
+                  </div>
+                  <div class="comment-item">
+                    <span class="comment-user">Local Baker:</span>
+                    <span class="comment-content">10am-4pm today!</span>
+                  </div>
+                  <button class="scroll-to-bottom" data-post-id="3">▼</button>
+              </div>
+            </div>
+        </section>
+        
+        <section class="post">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <img src="images/user4.jpg" alt="Urban Photographer" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+            <strong>Urban Photographer</strong> <small style="color:var(--muted)">in Photography · 3h · 1.2km away</small>
+          </div>
+          <p>Just captured this amazing cityscape from the rooftop!</p>
+          <img src="images/rooftop.jpg" alt="rooftop view">
+          <div class="post-actions">
+              <button class="like-btn" data-post-id="4">
+                <span class="heart-icon">❤</span>
+                <span class="like-count">78</span>
+              </button>
+            <div class="comment-count" data-post-id="4">
+                <span class="comment-icon">💬</span>
+                <span class="count">15</span>
+              </div>
+          </div>
+          <div class="comment-section">
+              <input type="text" class="comment-input" placeholder="Add a comment..." data-post-id="4">
+                <button class="comment-submit" data-post-id="4">Post Comment</button>
+                <div class="comments-toggle" data-post-id="4">Show Comments (15)</div>
+                <div class="comments-list" data-post-id="4" style="display: none;">
+                  <!-- 评论内容 -->
+                  <div class="comment-item">
+                    <span class="comment-user">City Explorer:</span>
+                    <span class="comment-content">Wow! Where is this rooftop?</span>
+                  </div>
+                  <div class="comment-item">
+                    <span class="comment-user">Urban Photographer:</span>
+                    <span class="comment-content">Downtown area, near Central Park.</span>
+                  </div>
+                  <button class="scroll-to-bottom" data-post-id="4">▼</button>
+              </div>
+            </div>
+        </section>
+      </div>
+    </div>
+  </main>
+    
+    <!-- 创建帖子按钮 -->
+    <button id="create-post-btn" class="create-post-btn">+</button>
+    
+    <!-- 创建帖子模态框 -->
+    <div id="create-post-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Create New Post</h3>
+          <button id="close-modal" class="modal-close">×</button>
+        </div>
+        <div class="modal-body">
+          <textarea id="post-content" placeholder="Share your thoughts..."></textarea>
+          <div style="margin-top: 16px;">
+            <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">Choose a Tag:</label>
+            <div id="tag-container" style="display: flex; flex-wrap: wrap; gap: 8px;">
+              <button class="tag-btn" data-tag="Bakery">Bakery</button>
+              <button class="tag-btn" data-tag="Photography">Photography</button>
+              <button class="tag-btn" data-tag="Music">Music</button>
+              <button class="tag-btn" data-tag="Movies">Movies</button>
+              <button class="tag-btn" data-tag="Reading Club">Reading Club</button>
+              <button class="tag-btn" data-tag="Sports">Sports</button>
+              <button class="tag-btn" data-tag="Art">Art</button>
+            </div>
+            <input type="hidden" id="selected-tag" value="">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="cancel-post" class="btn btn-secondary">Cancel</button>
+          <button id="submit-post" class="btn">Post</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 底部消息栏 -->
+    <div class="message-bar">
+      <div class="message-item">
+        <div class="message-icon">
+          💬
+        </div>
+        <span>Messages</span>
+      </div>
+      <div class="message-item">
+        <div class="message-icon">
+          🔔
+        </div>
+        <span>Notifications</span>
+      </div>
+      <div class="message-item">
+        <div class="message-icon">★</div>
+        <span>Favorites</span>
+      </div>
+    </div>
+  </div>
   </main>
   <footer style="padding:14px 22px;color:var(--muted)">© 2025 Hobby Circle — Feed (demo)</footer>
-</body>
-</html>
- 
     <script>
-      // 点赞功能
-      document.querySelectorAll('.like-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const postId = this.getAttribute('data-post-id');
-          const countEl = this.querySelector('.like-count');
-          let count = parseInt(countEl.textContent);
-          
-          // 切换点赞状态
-          if (this.classList.contains('liked')) {
-            count--;
-            this.classList.remove('liked');
-          } else {
-            count++;
-            this.classList.add('liked');
+      // 用户兴趣数据 - 模拟用户浏览历史
+      const userInterests = {
+        'Bakery': 85,    // 浏览量
+        'Photography': 95,
+        'Music': 60,
+        'Movies': 70,
+        'Reading Club': 50
+      };
+      
+      // 收藏的帖子
+      let favoritePosts = JSON.parse(localStorage.getItem('favoritePosts')) || [];
+      
+      // 初始化收藏按钮状态
+      function initFavoriteButtons() {
+        document.querySelectorAll('.favorite-btn').forEach(btn => {
+          const postId = btn.getAttribute('data-post-id');
+          if (favoritePosts.includes(postId)) {
+            btn.classList.add('favorited');
+            btn.textContent = '★';
           }
           
-          countEl.textContent = count;
+          btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleFavorite(this);
+          });
         });
-      });
-
-      // 评论功能
-      document.querySelectorAll('.comment-submit').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const postId = this.getAttribute('data-post-id');
-          const input = this.previousElementSibling;
-          const comment = input.value.trim();
-          if (comment) {
-            const listEl = document.querySelector(`.comments-list[data-post-id="${postId}"]`);
-            const commentItem = document.createElement('div');
-            commentItem.className = 'comment-item';
-            
-            // 创建用户名和评论内容元素，使新评论也显示用户名
-            const userNameSpan = document.createElement('span');
-            userNameSpan.className = 'comment-user';
-            userNameSpan.textContent = 'You:';
-            
-            const commentContentSpan = document.createElement('span');
-            commentContentSpan.className = 'comment-content';
-            commentContentSpan.textContent = comment;
-            
-            commentItem.appendChild(userNameSpan);
-            commentItem.appendChild(commentContentSpan);
-            
-            // 添加新评论的动画效果
-            commentItem.style.opacity = '0';
-            commentItem.style.transform = 'translateX(-10px)';
-            commentItem.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-            
-            listEl.appendChild(commentItem);
-            
-            // 触发重排后应用动画
-            setTimeout(() => {
-              commentItem.style.opacity = '1';
-              commentItem.style.transform = 'translateX(0)';
-            }, 10);
-            
-            input.value = '';
-            
-            // 更新评论数量
-            const commentCountEl = document.querySelector(`.comment-count[data-post-id="${postId}"] .count`);
-            let count = parseInt(commentCountEl.textContent);
-            count++;
-            commentCountEl.textContent = count;
-            
-            // Update comment toggle button text
-            const toggleBtn = document.querySelector(`.comments-toggle[data-post-id="${postId}"]`);
-            if (toggleBtn.textContent.includes('Show Comments')) {
-              toggleBtn.textContent = `Show Comments (${count})`;
+      }
+      
+      // 切换收藏状态
+      function toggleFavorite(button) {
+        const postId = button.getAttribute('data-post-id');
+        
+        if (button.classList.contains('favorited')) {
+          // 取消收藏
+          button.classList.remove('favorited');
+          button.textContent = '☆';
+          favoritePosts = favoritePosts.filter(id => id !== postId);
+          showNotification('Removed from favorites');
+        } else {
+          // 添加收藏
+          button.classList.add('favorited');
+          button.textContent = '★';
+          favoritePosts.push(postId);
+          showNotification('Added to favorites');
+        }
+        
+        // 保存到localStorage
+        localStorage.setItem('favoritePosts', JSON.stringify(favoritePosts));
+      }
+      
+      // 初始化搜索功能
+      function initSearch() {
+        const searchInput = document.getElementById('search-input');
+        
+        searchInput.addEventListener('input', function() {
+          const searchTerm = this.value.toLowerCase();
+          const posts = document.querySelectorAll('.post');
+          
+          posts.forEach(post => {
+            const postText = post.textContent.toLowerCase();
+            // 根据帖子内容进行搜索
+            if (postText.includes(searchTerm)) {
+              post.style.display = 'block';
             } else {
-              // 如果评论已展开，确保切换按钮也更新数量
-              toggleBtn.textContent = `Hide Comments`;
-              
-              // 添加一个临时通知，显示"评论已添加"
-              const notification = document.createElement('div');
-              notification.textContent = 'Comment added!';
-              notification.style.cssText = 'position: fixed; bottom: 20px; right: 20px; background: var(--accent); color: white; padding: 10px 15px; border-radius: 6px; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15);';
-              document.body.appendChild(notification);
-              setTimeout(() => {
-                notification.style.opacity = '0';
-                notification.style.transition = 'opacity 0.5s ease';
-                setTimeout(() => {
-                  notification.remove();
-                }, 500);
-              }, 2000);
+              post.style.display = 'none';
+            }
+          });
+        });
+      }
+      
+      // 下拉刷新功能
+      function initPullToRefresh() {
+        const pullRefresh = document.getElementById('pull-refresh');
+        const refreshIcon = document.getElementById('refresh-icon');
+        let startY = 0;
+        let isPulling = false;
+        
+        document.addEventListener('touchstart', function(e) {
+          // 只有当页面滚动到顶部时才启用下拉刷新
+          if (window.scrollY === 0) {
+            startY = e.touches[0].clientY;
+            isPulling = true;
+          }
+        }, {passive: true});
+        
+        document.addEventListener('touchmove', function(e) {
+          if (!isPulling) return;
+          
+          const currentY = e.touches[0].clientY;
+          const pullDistance = currentY - startY;
+          
+          // 只有下拉才触发
+          if (pullDistance > 0) {
+            // 限制最大下拉距离
+            const maxPullDistance = 100;
+            const distance = Math.min(pullDistance, maxPullDistance);
+            
+            // 调整下拉区域高度
+            pullRefresh.style.height = (distance * 0.5) + 'px';
+            
+            // 旋转图标
+            const rotation = (distance / maxPullDistance) * 180;
+            refreshIcon.style.transform = `rotate(${rotation}deg)`;
+            
+            // 如果下拉超过阈值，可以添加视觉提示
+            if (distance > maxPullDistance * 0.8) {
+              refreshIcon.style.color = '#4caf50';
+            } else {
+              refreshIcon.style.color = 'var(--accent)';
             }
           }
+        }, {passive: true});
+        
+        document.addEventListener('touchend', function() {
+          if (!isPulling) return;
+          
+          const currentHeight = parseInt(pullRefresh.style.height || '0');
+          
+          // 如果下拉足够距离，触发刷新
+          if (currentHeight > 40) {
+            refreshIcon.classList.add('spinning');
+            refreshIcon.style.transform = 'rotate(0deg)';
+            
+            // 模拟刷新操作
+            const posts = document.querySelectorAll('.post');
+            posts.forEach(post => {
+              post.style.opacity = '0.5';
+            });
+            
+            setTimeout(() => {
+              // 恢复帖子显示
+              posts.forEach(post => {
+                post.style.opacity = '1';
+              });
+              
+              refreshIcon.classList.remove('spinning');
+              pullRefresh.style.height = '0';
+              
+              // 显示刷新成功的提示
+              showNotification('Feed refreshed!');
+            }, 1000);
+          } else {
+            // 否则弹回
+            pullRefresh.style.height = '0';
+            refreshIcon.style.transform = 'rotate(0deg)';
+          }
+          
+          isPulling = false;
         });
+        
+        // 为桌面浏览器添加鼠标拖拽支持
+        let isDragging = false;
+        
+        document.addEventListener('mousedown', function(e) {
+          if (window.scrollY === 0) {
+            startY = e.clientY;
+            isDragging = true;
+          }
+        });
+        
+        document.addEventListener('mousemove', function(e) {
+          if (!isDragging) return;
+          
+          const currentY = e.clientY;
+          const pullDistance = currentY - startY;
+          
+          if (pullDistance > 0) {
+            const maxPullDistance = 100;
+            const distance = Math.min(pullDistance, maxPullDistance);
+            
+            pullRefresh.style.height = (distance * 0.5) + 'px';
+            const rotation = (distance / maxPullDistance) * 180;
+            refreshIcon.style.transform = `rotate(${rotation}deg)`;
+            
+            refreshIcon.style.color = distance > maxPullDistance * 0.8 ? '#4caf50' : 'var(--accent)';
+          }
+        });
+        
+        document.addEventListener('mouseup', function() {
+          if (!isDragging) return;
+          
+          const currentHeight = parseInt(pullRefresh.style.height || '0');
+          
+          if (currentHeight > 40) {
+            refreshIcon.classList.add('spinning');
+            refreshIcon.style.transform = 'rotate(0deg)';
+            
+            const posts = document.querySelectorAll('.post');
+            posts.forEach(post => {
+              post.style.opacity = '0.5';
+            });
+            
+            setTimeout(() => {
+              posts.forEach(post => {
+                post.style.opacity = '1';
+              });
+              
+              refreshIcon.classList.remove('spinning');
+              pullRefresh.style.height = '0';
+              showNotification('Feed refreshed!');
+            }, 1000);
+          } else {
+            pullRefresh.style.height = '0';
+            refreshIcon.style.transform = 'rotate(0deg)';
+          }
+          
+          isDragging = false;
+        });
+      }
+      
+      // 显示通知函数
+      function showNotification(message) {
+        const notification = document.createElement('div');
+        notification.textContent = message;
+        notification.style.cssText = 'position: fixed; bottom: 80px; right: 20px; background: var(--accent); color: white; padding: 12px 16px; border-radius: 8px; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15);';
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+          notification.style.opacity = '0';
+          notification.style.transition = 'opacity 0.5s ease';
+          setTimeout(() => {
+            notification.remove();
+          }, 500);
+        }, 2000);
+      }
+      
+      // 初始化创建帖子功能
+      function initCreatePost() {
+        const createBtn = document.getElementById('create-post-btn');
+        const modal = document.getElementById('create-post-modal');
+        const closeBtn = document.getElementById('close-modal');
+        const cancelBtn = document.getElementById('cancel-post');
+        const submitBtn = document.getElementById('submit-post');
+        const postContent = document.getElementById('post-content');
+        const tagButtons = document.querySelectorAll('.tag-btn');
+        const selectedTagInput = document.getElementById('selected-tag');
+        let selectedTagBtn = null;
+        
+        // 标签按钮样式
+        tagButtons.forEach(btn => {
+          btn.style.padding = '6px 12px';
+          btn.style.border = '1px solid #e6eef9';
+          btn.style.borderRadius = '16px';
+          btn.style.backgroundColor = 'white';
+          btn.style.color = '#333';
+          btn.style.cursor = 'pointer';
+          btn.style.transition = 'all 0.2s ease';
+          btn.style.fontSize = '14px';
+          
+          btn.addEventListener('click', function() {
+            // 移除之前选中的标签样式
+            if (selectedTagBtn) {
+              selectedTagBtn.style.backgroundColor = 'white';
+              selectedTagBtn.style.color = '#333';
+              selectedTagBtn.style.borderColor = '#e6eef9';
+            }
+            
+            // 设置新选中的标签样式
+            this.style.backgroundColor = 'var(--accent)';
+            this.style.color = 'white';
+            this.style.borderColor = 'var(--accent)';
+            selectedTagBtn = this;
+            selectedTagInput.value = this.getAttribute('data-tag');
+          });
+        });
+        
+        // 打开模态框
+        createBtn.addEventListener('click', function() {
+          modal.style.display = 'flex';
+          postContent.value = '';
+          selectedTagInput.value = '';
+          
+          // 重置标签按钮样式
+          if (selectedTagBtn) {
+            selectedTagBtn.style.backgroundColor = 'white';
+            selectedTagBtn.style.color = '#333';
+            selectedTagBtn.style.borderColor = '#e6eef9';
+            selectedTagBtn = null;
+          }
+          
+          // 添加打开动画
+          const modalContent = modal.querySelector('.modal-content');
+          modalContent.style.transform = 'scale(0.9)';
+          modalContent.style.opacity = '0';
+          modalContent.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+          
+          setTimeout(() => {
+            modalContent.style.transform = 'scale(1)';
+            modalContent.style.opacity = '1';
+          }, 10);
+        });
+        
+        // 关闭模态框
+        function closeModal() {
+          const modalContent = modal.querySelector('.modal-content');
+          modalContent.style.transform = 'scale(0.9)';
+          modalContent.style.opacity = '0';
+          
+          setTimeout(() => {
+            modal.style.display = 'none';
+          }, 300);
+        }
+        
+        closeBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+        
+        // 点击模态框外部关闭
+        modal.addEventListener('click', function(e) {
+          if (e.target === modal) {
+            closeModal();
+          }
+        });
+        
+        // 提交帖子
+        submitBtn.addEventListener('click', function() {
+          const content = postContent.value.trim();
+          const tag = selectedTagInput.value;
+          
+          if (content && tag) {
+            createNewPost(content, tag);
+            closeModal();
+          } else {
+            showNotification('Please enter content and select a tag');
+          }
+        });
+      }
+      
+      // 创建新帖子并添加到页面
+      function createNewPost(content, tag) {
+        const feedTab = document.getElementById('following-tab');
+        const postId = 'new-post-' + Date.now();
+        
+        // 创建新帖子元素
+        const newPost = document.createElement('section');
+        newPost.className = 'post';
+        newPost.style.opacity = '0';
+        newPost.style.transform = 'translateY(20px)';
+        newPost.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        
+        // 构建帖子HTML
+        newPost.innerHTML = `
+          <button class="favorite-btn" data-post-id="${postId}">☆</button>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <img src="images/user1.jpg" alt="You" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+            <strong>You</strong> <small style="color:var(--muted)">in ${tag} · Just now</small>
+          </div>
+          <p>${content}</p>
+          <div class="post-actions">
+              <button class="like-btn" data-post-id="${postId}">
+                <span class="heart-icon">❤</span>
+                <span class="like-count">0</span>
+              </button>
+            <div class="comment-count" data-post-id="${postId}">
+                <span class="comment-icon">💬</span>
+                <span class="count">0</span>
+              </div>
+          </div>
+          <div class="comment-section">
+              <input type="text" class="comment-input" placeholder="Add a comment..." data-post-id="${postId}">
+                <button class="comment-submit" data-post-id="${postId}">Post Comment</button>
+                <div class="comments-toggle" data-post-id="${postId}">Show Comments (0)</div>
+                <div class="comments-list" data-post-id="${postId}" style="display: none;">
+                  <button class="scroll-to-bottom" data-post-id="${postId}">▼</button>
+              </div>
+            </div>
+        `;
+        
+        // 将新帖子添加到顶部
+        const firstPost = feedTab.querySelector('.post');
+        if (firstPost) {
+          feedTab.insertBefore(newPost, firstPost);
+        } else {
+          feedTab.appendChild(newPost);
+        }
+        
+        // 触发动画
+        setTimeout(() => {
+          newPost.style.opacity = '1';
+          newPost.style.transform = 'translateY(0)';
+        }, 10);
+        
+        // 初始化新帖子的事件
+        updateCommentFeatures();
+        initFavoriteButtons();
+        
+        // 显示成功通知
+        showNotification('Post created successfully!');
+      }
+      
+      // 初始化底部消息栏
+      function initMessageBar() {
+        console.log('Initializing message bar...');
+        const messageItems = document.querySelectorAll('.message-bar .message-item');
+        let activePanel = null;
+        
+        console.log('Message items found:', messageItems.length);
+        
+        // 为消息栏添加样式，确保它在底部固定显示
+        const messageBar = document.querySelector('.message-bar');
+        if (messageBar) {
+          messageBar.style.position = 'fixed';
+          messageBar.style.bottom = '0';
+          messageBar.style.left = '0';
+          messageBar.style.right = '0';
+          messageBar.style.display = 'flex';
+          messageBar.style.justifyContent = 'space-around';
+          messageBar.style.backgroundColor = 'white';
+          messageBar.style.borderTop = '1px solid #e6eef9';
+          messageBar.style.padding = '12px 0';
+          messageBar.style.zIndex = '98';
+          messageBar.style.boxShadow = '0 -1px 3px rgba(0,0,0,0.05)';
+        }
+        
+        // 创建消息面板
+        function createMessagePanel(type) {
+          console.log('Creating message panel for:', type);
+          const panel = document.createElement('div');
+          panel.className = 'message-panel';
+          panel.id = `${type}-panel`;
+          panel.style.position = 'fixed';
+          panel.style.bottom = '70px';
+          panel.style.left = '0';
+          panel.style.right = '0';
+          panel.style.backgroundColor = 'white';
+          panel.style.borderTop = '1px solid #e6eef9';
+          panel.style.boxShadow = '0 -2px 10px rgba(0,0,0,0.1)';
+          panel.style.maxHeight = '70vh';
+          panel.style.display = 'none'; // 初始隐藏，点击时显示
+          panel.style.zIndex = '99';
+          panel.style.overflow = 'hidden';
+          panel.style.opacity = '1';
+          panel.style.transform = 'translateY(0)';
+          panel.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+          
+          // 面板头部
+          const header = document.createElement('div');
+          header.style.padding = '16px 22px';
+          header.style.borderBottom = '1px solid #eee';
+          header.style.display = 'flex';
+          header.style.justifyContent = 'space-between';
+          header.style.alignItems = 'center';
+          
+          const title = document.createElement('h3');
+          title.style.margin = '0';
+          title.style.fontSize = '18px';
+          
+          const closeBtn = document.createElement('button');
+          closeBtn.textContent = '×';
+          closeBtn.style.background = 'none';
+          closeBtn.style.border = 'none';
+          closeBtn.style.fontSize = '24px';
+          closeBtn.style.cursor = 'pointer';
+          closeBtn.style.color = 'var(--muted)';
+          
+          // 面板内容区域
+          const content = document.createElement('div');
+          content.className = 'panel-content';
+          content.style.padding = '16px 22px';
+          content.style.overflowY = 'auto';
+          content.style.maxHeight = 'calc(70vh - 70px)';
+          
+          // 根据类型设置内容
+          if (type === 'Messages') {
+            title.textContent = 'Messages';
+            content.innerHTML = `
+              <div class="message-conversation">
+                <div class="message-user" style="display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 8px; cursor: pointer; transition: background-color 0.2s ease;">
+                  <img src="images/user2.jpg" alt="Alice" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover;">
+                  <div>
+                    <div style="font-weight: bold; display: flex; justify-content: space-between; align-items: center;">
+                      <span>Alice <span style="display: inline-block; width: 8px; height: 8px; background-color: #10b981; border-radius: 50%; margin-left: 6px;"></span></span>
+                      <span style="font-size: 12px; color: var(--muted);">2h</span>
+                    </div>
+                    <div style="font-size: 14px; color: #333;">Great sourdough recipe! Can you share it?</div>
+                  </div>
+                </div>
+                <div class="message-user" style="display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 8px; cursor: pointer; transition: background-color 0.2s ease; margin-top: 8px;">
+                  <img src="images/user3.jpg" alt="Charlie" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover;">
+                  <div>
+                    <div style="font-weight: bold; display: flex; justify-content: space-between; align-items: center;">
+                      <span>Charlie</span>
+                      <span style="font-size: 12px; color: var(--muted);">5h</span>
+                    </div>
+                    <div style="font-size: 14px; color: #333;">Are you joining the photography meetup this Saturday?</div>
+                  </div>
+                </div>
+                <div class="message-user" style="display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 8px; cursor: pointer; transition: background-color 0.2s ease; margin-top: 8px;">
+                  <img src="images/user4.jpg" alt="Diana" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover;">
+                  <div>
+                    <div style="font-weight: bold; display: flex; justify-content: space-between; align-items: center;">
+                      <span>Diana <span style="display: inline-block; width: 8px; height: 8px; background-color: #10b981; border-radius: 50%; margin-left: 6px;"></span></span>
+                      <span style="font-size: 12px; color: var(--muted);">Yesterday</span>
+                    </div>
+                    <div style="font-size: 14px; color: var(--muted);">Thanks for the book recommendation! I just finished reading it and loved it.</div>
+                  </div>
+                </div>
+              </div>
+            `;
+          } else if (type === 'Notifications') {
+            title.textContent = 'Notifications';
+            content.innerHTML = `
+              <div class="notification-item" style="padding: 12px; border-radius: 8px; transition: background-color 0.2s ease;">
+                <div style="display: flex; gap: 12px;">
+                  <img src="images/user5.jpg" alt="Pro Baker" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                  <div>
+                    <div style="font-weight: bold;">Pro Baker</div>
+                    <div style="font-size: 14px; color: #333;">liked your post about sourdough baking</div>
+                    <div style="font-size: 12px; color: var(--muted);">10 minutes ago</div>
+                  </div>
+                </div>
+              </div>
+              <div class="notification-item" style="padding: 12px; border-radius: 8px; transition: background-color 0.2s ease; margin-top: 8px;">
+                <div style="display: flex; gap: 12px;">
+                  <img src="images/user6.jpg" alt="Macro Photographer" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                  <div>
+                    <div style="font-weight: bold;">Macro Photographer</div>
+                    <div style="font-size: 14px; color: #333;">commented on your photo: "Amazing composition!"</div>
+                    <div style="font-size: 12px; color: var(--muted);">1 hour ago</div>
+                  </div>
+                </div>
+              </div>
+              <div class="notification-item" style="padding: 12px; border-radius: 8px; transition: background-color 0.2s ease; margin-top: 8px;">
+                <div style="display: flex; gap: 12px;">
+                  <img src="images/user7.jpg" alt="Acoustic Guitarist" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                  <div>
+                    <div style="font-weight: bold;">Acoustic Guitarist</div>
+                    <div style="font-size: 14px; color: #333;">mentioned you in a comment: "@You should check this out!"</div>
+                    <div style="font-size: 12px; color: var(--muted);">3 hours ago</div>
+                  </div>
+                </div>
+              </div>
+              <div class="notification-item" style="padding: 12px; border-radius: 8px; transition: background-color 0.2s ease; margin-top: 8px;">
+                <div style="display: flex; gap: 12px;">
+                  <div style="width: 40px; height: 40px; border-radius: 50%; background-color: var(--accent); display: flex; align-items: center; justify-content: center; color: white;">📢</div>
+                  <div>
+                    <div style="font-weight: bold;">System</div>
+                    <div style="font-size: 14px; color: #333;">New circle "Digital Art" is now available for joining</div>
+                    <div style="font-size: 12px; color: var(--muted);">5 hours ago</div>
+                  </div>
+                </div>
+              </div>
+              <div class="notification-item" style="padding: 12px; border-radius: 8px; transition: background-color 0.2s ease; margin-top: 8px;">
+                <div style="display: flex; gap: 12px;">
+                  <div style="width: 40px; height: 40px; border-radius: 50%; background-color: #f59e0b; display: flex; align-items: center; justify-content: center; color: white;">🎂</div>
+                  <div>
+                    <div style="font-weight: bold;">Event</div>
+                    <div style="font-size: 14px; color: #333;">Photography masterclass this weekend at Central Park</div>
+                    <div style="font-size: 12px; color: var(--muted);">Yesterday</div>
+                  </div>
+                </div>
+              </div>
+            `;
+          } else if (type === 'Favorites') {
+            title.textContent = 'Favorites';
+            if (favoritePosts.length > 0) {
+              // 如果有收藏的帖子，显示收藏列表
+              let favoritesHTML = '';
+              favoritePosts.forEach(postId => {
+                const post = document.querySelector(`[data-post-id="${postId}"]`).closest('.post');
+                if (post) {
+                  const userName = post.querySelector('strong').textContent;
+                  const userImage = post.querySelector('img[alt]').src;
+                  const postContent = post.querySelector('p').textContent;
+                  const circleText = post.querySelector('small').textContent;
+                  
+                  favoritesHTML += `
+                    <div class="favorite-post" style="padding: 12px; border-radius: 8px; border: 1px solid #eee; margin-bottom: 12px;">
+                      <div style="display: flex; align-items: center; gap: 8px;">
+                        <img src="${userImage}" alt="${userName}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+                        <div>
+                          <div style="font-weight: bold;">${userName}</div>
+                          <div style="font-size: 12px; color: var(--muted);">${circleText}</div>
+                        </div>
+                      </div>
+                      <div style="margin-top: 8px; font-size: 14px; color: #333;">${postContent}</div>
+                    </div>
+                  `;
+                }
+              });
+              content.innerHTML = favoritesHTML;
+            } else {
+              // 如果没有收藏的帖子，显示提示信息
+              content.innerHTML = `
+                <div style="text-align: center; padding: 40px 20px; color: var(--muted);">
+                  <div style="font-size: 48px; margin-bottom: 16px;">★</div>
+                  <div style="font-size: 18px; margin-bottom: 8px;">No favorites yet</div>
+                  <div style="font-size: 14px;">Save posts you like by clicking the star icon</div>
+                </div>
+              `;
+            }
+          }
+          
+          header.appendChild(title);
+          header.appendChild(closeBtn);
+          panel.appendChild(header);
+          panel.appendChild(content);
+          
+          // 关闭按钮事件
+          closeBtn.addEventListener('click', function() {
+            togglePanel(panel);
+          });
+          
+          return panel;
+        }
+        
+        // 切换面板显示/隐藏
+        function togglePanel(panel) {
+          if (activePanel && activePanel !== panel) {
+            activePanel.style.display = 'none';
+          }
+          
+          if (panel.style.display === 'block') {
+            panel.style.display = 'none';
+            activePanel = null;
+          } else {
+            panel.style.display = 'block';
+            activePanel = panel;
+            
+            // 添加显示动画
+            panel.style.opacity = '0';
+            panel.style.transform = 'translateY(20px)';
+            panel.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+            
+            setTimeout(() => {
+              if (panel) {
+                panel.style.opacity = '1';
+                panel.style.transform = 'translateY(0)';
+              }
+            }, 10);
+          }
+        }
+        
+        // 为每个消息项添加点击事件
+        messageItems.forEach(item => {
+          console.log('Adding click event to message item:', item.textContent.trim());
+          
+          // 确保消息项有正确的样式
+          item.style.display = 'flex';
+          item.style.flexDirection = 'column';
+          item.style.alignItems = 'center';
+          item.style.cursor = 'pointer';
+          item.style.padding = '8px 16px';
+          item.style.borderRadius = '8px';
+          item.style.transition = 'background-color 0.2s ease';
+          
+          // 悬停效果
+          item.addEventListener('mouseenter', function() {
+            this.style.backgroundColor = '#f0f4ff';
+          });
+          
+          item.addEventListener('mouseleave', function() {
+            this.style.backgroundColor = 'transparent';
+          });
+          
+          item.addEventListener('click', function(e) {
+            e.stopPropagation();
+            console.log('Message item clicked:', this.textContent.trim());
+            
+            const type = this.querySelector('span').textContent;
+            console.log('Panel type:', type);
+            
+            let panel = document.getElementById(`${type}-panel`);
+            
+            // 如果面板不存在，创建面板
+            if (!panel) {
+              panel = createMessagePanel(type);
+              document.body.appendChild(panel);
+              console.log('Created new panel:', panel.id);
+            } else {
+              console.log('Using existing panel:', panel.id);
+            }
+            
+            // 切换面板显示
+            togglePanel(panel);
+            
+            // 点击消息用户时的交互
+            if (panel.querySelector('.message-conversation')) {
+              const messageUsers = panel.querySelectorAll('.message-user');
+              messageUsers.forEach(user => {
+                user.addEventListener('click', function(e) {
+                  e.stopPropagation();
+                  const userName = this.querySelector('strong').textContent;
+                  showNotification(`Opening chat with ${userName}...`);
+                });
+              });
+            }
+          });
+        });
+        
+        // 点击页面其他地方关闭面板
+        document.addEventListener('click', function(e) {
+          if (activePanel && !e.target.closest('.message-bar') && !e.target.closest('.message-panel')) {
+            activePanel.style.display = 'none';
+            activePanel = null;
+          }
+        });
+      }
+      
+      // 模拟帖子数据，用于推荐
+      const postData = [
+        {
+          id: 5,
+          user: 'Pro Baker',
+          avatar: 'images/user5.jpg',
+          circle: 'Bakery',
+          time: '30m',
+          content: 'Check out this amazing cake decoration technique I mastered!',
+          image: 'images/cake.jpg',
+          likes: 85,
+          comments: 24,
+          commentList: [
+            { user: 'Baking Fan', content: 'Incredible! How long did this take?' },
+            { user: 'Cake Lover', content: 'This is so beautiful! 🎂' },
+            { user: 'Pastry Chef', content: 'What kind of frosting did you use?' },
+            { user: 'Home Baker', content: 'I need to try this technique!' }
+          ]
+        },
+        {
+          id: 6,
+          user: 'Macro Photographer',
+          avatar: 'images/user6.jpg',
+          circle: 'Photography',
+          time: '2h',
+          content: 'Macro photography tips for capturing tiny details in nature.',
+          image: 'images/macro.jpg',
+          likes: 120,
+          comments: 35,
+          commentList: [
+            { user: 'Nature Lover', content: 'These shots are amazing! What lens do you use?' },
+            { user: 'Photography Enthusiast', content: 'Great tips, thank you!' },
+            { user: 'Camera Geek', content: 'I recommend using a ring light for better results.' }
+          ]
+        },
+        {
+          id: 7,
+          user: 'Acoustic Guitarist',
+          avatar: 'images/user7.jpg',
+          circle: 'Music',
+          time: '4h',
+          content: 'Just composed a new melody, would love your feedback!',
+          image: 'images/guitar.jpg',
+          likes: 67,
+          comments: 18,
+          commentList: [
+            { user: 'Music Fan', content: 'Beautiful composition! 😊' }
+          ]
+        },
+        {
+          id: 8,
+          user: 'Book Reviewer',
+          avatar: 'images/user8.jpg',
+          circle: 'Reading Club',
+          time: '5h',
+          content: 'My review of the latest bestseller everyone is talking about.',
+          image: 'images/book.jpg',
+          likes: 45,
+          comments: 12,
+          commentList: [
+            { user: 'Reader', content: 'Thanks for the honest review!' },
+            { user: 'Bookworm', content: 'I loved that book too!' },
+            { user: 'Literary Critic', content: 'Interesting perspective on the character development.' },
+            { user: 'Avid Reader', content: 'I disagree with your take on the ending.' },
+            { user: 'Book Club Member', content: 'We discussed this at our last meeting!' }
+          ]
+        },
+        {
+          id: 9,
+          user: 'Film Critic',
+          avatar: 'images/user9.jpg',
+          circle: 'Movies',
+          time: '6h',
+          content: 'Analysis of the cinematography in the latest blockbuster.',
+          image: 'images/film.jpg',
+          likes: 78,
+          comments: 21,
+          commentList: [
+            { user: 'Movie Buff', content: 'Great analysis! I noticed that too.' },
+            { user: 'Cinema Lover', content: 'Spot on! The visuals were stunning.' },
+            { user: 'Film Student', content: 'This helped me understand the director\'s vision better.' }
+          ]
+        }
+      ];
+      
+      // 根据用户兴趣推荐帖子
+      function recommendPosts() {
+        // 排序兴趣，获取浏览量最高的主题
+        const sortedInterests = Object.entries(userInterests)
+          .sort(([,a], [,b]) => b - a);
+        
+        // 根据用户兴趣分数分配权重
+        const recommendedPosts = postData.map(post => {
+          // 找到帖子所在圈子的兴趣分数
+          const interestScore = userInterests[post.circle] || 0;
+          // 计算推荐分数（兴趣分数 + 互动率）
+          const engagementRate = (post.likes + post.comments * 2) / 10;
+          post.relevanceScore = interestScore * 0.7 + engagementRate * 0.3;
+          return post;
+        }).sort((a, b) => b.relevanceScore - a.relevanceScore);
+        
+        return recommendedPosts;
+      }
+      
+      // 渲染推荐帖子
+      function renderRecommendedPosts() {
+        const discoverTab = document.getElementById('discover-tab');
+        const recommendedPosts = recommendPosts();
+        
+        // 添加推荐说明
+        const recommendationNote = document.createElement('div');
+        recommendationNote.className = 'recommendation-note';
+        recommendationNote.style.padding = '12px 16px';
+        recommendationNote.style.backgroundColor = 'rgba(43, 140, 255, 0.1)';
+        recommendationNote.style.borderRadius = '8px';
+        recommendationNote.style.marginBottom = '16px';
+        recommendationNote.style.fontSize = '14px';
+        recommendationNote.style.color = '#333';
+        recommendationNote.innerHTML = '<strong>📊 Recommended for you:</strong> Based on your interests in Photography and Bakery';
+        discoverTab.appendChild(recommendationNote);
+        
+        // 添加推荐帖子
+        recommendedPosts.forEach(post => {
+          const postElement = document.createElement('section');
+          postElement.className = 'post';
+          
+          // 构建评论HTML
+          let commentsHTML = '';
+          post.commentList.forEach(comment => {
+            commentsHTML += `
+              <div class="comment-item">
+                <span class="comment-user">${comment.user}:</span>
+                <span class="comment-content">${comment.content}</span>
+              </div>
+            `;
+          });
+          
+          // 处理帖子内容，移除重复句子并添加图片描述
+          let processedContent = post.content;
+          
+          // 检查并移除重复句子（简单实现：按句号分割后去重）
+          const sentences = processedContent.split('. ');
+          if (sentences.length > 1) {
+            const uniqueSentences = [];
+            const seen = new Set();
+            
+            for (const sentence of sentences) {
+              // 只保留非空句子且未见过的句子
+              if (sentence.trim() && !seen.has(sentence.trim())) {
+                uniqueSentences.push(sentence);
+                seen.add(sentence.trim());
+              }
+            }
+            
+            processedContent = uniqueSentences.join('. ');
+            // 确保以句号结尾
+            if (processedContent && !processedContent.endsWith('.')) {
+              processedContent += '.';
+            }
+          }
+          
+          // 为不同类型的图片添加相应的简短描述
+          let imageDescription = '';
+          if (post.image.includes('cake')) {
+            imageDescription = 'A beautifully decorated cake with intricate designs.';
+          } else if (post.image.includes('macro')) {
+            imageDescription = 'Close-up shot of tiny natural details with shallow depth of field.';
+          } else if (post.image.includes('guitar')) {
+            imageDescription = 'Acoustic guitar with warm wood tones in natural lighting.';
+          } else if (post.image.includes('book')) {
+            imageDescription = 'Stack of books with vibrant cover designs on wooden surface.';
+          } else if (post.image.includes('film')) {
+            imageDescription = 'Cinematography detail from a recent blockbuster film.';
+          } else {
+            imageDescription = 'Visual content related to the post topic.';
+          }
+          
+          // 构建帖子HTML
+          postElement.innerHTML = `
+            <button class="favorite-btn" data-post-id="post-recommend-${post.id}">☆</button>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <img src="${post.avatar}" alt="${post.user}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+              <strong>${post.user}</strong> <small style="color:var(--muted)">in ${post.circle} · ${post.time}</small>
+            </div>
+            <p>${processedContent}</p>
+            <img src="${post.image}" alt="Post image">
+            <p class="image-description" style="font-size: 12px; color: var(--muted); font-style: italic; margin-top: 4px;">${imageDescription}</p>
+            <div class="post-actions">
+                <button class="like-btn" data-post-id="${post.id}">
+                  <span class="heart-icon">❤</span>
+                  <span class="like-count">${post.likes}</span>
+                </button>
+              <div class="comment-count" data-post-id="${post.id}">
+                  <span class="comment-icon">💬</span>
+                  <span class="count">${post.commentList.length}</span>
+                </div>
+            </div>
+            <div class="comment-section">
+                <input type="text" class="comment-input" placeholder="Add a comment..." data-post-id="${post.id}">
+                  <button class="comment-submit" data-post-id="${post.id}">Post Comment</button>
+                  <div class="comments-toggle" data-post-id="${post.id}">Show Comments (${post.commentList.length})</div>
+                  <div class="comments-list" data-post-id="${post.id}" style="display: none;">
+                    ${commentsHTML}
+                    <button class="scroll-to-bottom" data-post-id="${post.id}">▼</button>
+                </div>
+              </div>
+          `;
+          
+          discoverTab.appendChild(postElement);
+        });
+        
+        // 为新添加的帖子初始化事件监听器
+      updateCommentFeatures();
+      initPostEvents();
+      }
+      
+      // 标签页切换功能
+      function setupTabNavigation() {
+        const navButtons = document.querySelectorAll('.nav-btn');
+        const tabs = document.querySelectorAll('.feed-tab');
+        
+        navButtons.forEach(button => {
+          button.addEventListener('click', () => {
+            const tabId = button.getAttribute('data-tab');
+            
+            // 更新按钮状态
+            navButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            
+            // 更新标签页状态
+            tabs.forEach(tab => tab.classList.remove('active'));
+            document.getElementById(`${tabId}-tab`).classList.add('active');
+            
+            // 如果是发现标签且内容为空，则渲染推荐帖子
+            if (tabId === 'discover' && document.getElementById('discover-tab').children.length <= 1) {
+              renderRecommendedPosts();
+            }
+          });
+        });
+      }
+      
+      // 初始化帖子事件监听 - 简化版本，只用于新添加的帖子
+      function initPostEvents() {
+        // 为新添加的元素应用相同的事件处理
+        setupLikeButtons();
+        setupCommentSubmitButtons();
+        setupCommentCountClick();
+        setupCommentsToggle();
+        setupScrollToBottomButtons();
+      }
+      
+      // 更新用户兴趣（模拟用户交互）
+      function updateUserInterest(circle, increment = 5) {
+        if (userInterests[circle]) {
+          userInterests[circle] += increment;
+          // 确保不超过100
+          userInterests[circle] = Math.min(100, userInterests[circle]);
+        }
+      }
+      
+      // 统一的点赞功能处理
+      function setupLikeButtons() {
+        document.querySelectorAll('.like-btn').forEach(btn => {
+          const newBtn = btn.cloneNode(true);
+          btn.parentNode.replaceChild(newBtn, btn);
+          
+          newBtn.addEventListener('click', function(event) {
+            event.stopPropagation(); // 阻止事件冒泡
+            const postId = this.getAttribute('data-post-id');
+            const countEl = this.querySelector('.like-count');
+            let count = parseInt(countEl.textContent);
+            
+            // 切换点赞状态
+            if (this.classList.contains('liked')) {
+              count--;
+              this.classList.remove('liked');
+            } else {
+              count++;
+              this.classList.add('liked');
+            }
+            
+            countEl.textContent = count;
+          });
+        });
+      }
+      
+      // 统一的评论提交功能处理
+      function setupCommentSubmitButtons() {
+        document.querySelectorAll('.comment-submit').forEach(btn => {
+          const newBtn = btn.cloneNode(true);
+          btn.parentNode.replaceChild(newBtn, btn);
+          
+          newBtn.addEventListener('click', function(event) {
+            event.stopPropagation(); // 阻止事件冒泡
+            const postId = this.getAttribute('data-post-id');
+            const input = this.previousElementSibling;
+            const comment = input.value.trim();
+            if (comment) {
+              const listEl = document.querySelector(`.comments-list[data-post-id="${postId}"]`);
+              const commentItem = document.createElement('div');
+              commentItem.className = 'comment-item';
+              
+              // 创建用户名和评论内容元素
+              const userNameSpan = document.createElement('span');
+              userNameSpan.className = 'comment-user';
+              userNameSpan.textContent = 'You:';
+              
+              const commentContentSpan = document.createElement('span');
+              commentContentSpan.className = 'comment-content';
+              commentContentSpan.textContent = comment;
+              
+              commentItem.appendChild(userNameSpan);
+              commentItem.appendChild(commentContentSpan);
+              
+              // 添加新评论的动画效果
+              commentItem.style.opacity = '0';
+              commentItem.style.transform = 'translateX(-10px)';
+              commentItem.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+              
+              listEl.appendChild(commentItem);
+              
+              // 触发重排后应用动画
+              setTimeout(() => {
+                commentItem.style.opacity = '1';
+                commentItem.style.transform = 'translateX(0)';
+              }, 10);
+              
+              input.value = '';
+              
+              // 更新评论数量
+              const commentCountEl = document.querySelector(`.comment-count[data-post-id="${postId}"] .count`);
+              let count = parseInt(commentCountEl.textContent);
+              count++;
+              commentCountEl.textContent = count;
+              
+              // Update comment toggle button text
+              const toggleBtn = document.querySelector(`.comments-toggle[data-post-id="${postId}"]`);
+              if (toggleBtn.textContent.includes('Show Comments')) {
+                toggleBtn.textContent = `Show Comments (${count})`;
+              } else {
+                toggleBtn.textContent = `Hide Comments`;
+                
+                // 添加一个临时通知，显示"评论已添加"
+                const notification = document.createElement('div');
+                notification.textContent = 'Comment added!';
+                notification.style.cssText = 'position: fixed; bottom: 20px; right: 20px; background: var(--accent); color: white; padding: 10px 15px; border-radius: 6px; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15);';
+                document.body.appendChild(notification);
+                setTimeout(() => {
+                  notification.style.opacity = '0';
+                  notification.style.transition = 'opacity 0.5s ease';
+                  setTimeout(() => {
+                    notification.remove();
+                  }, 500);
+                }, 2000);
+              }
+              
+              // 自动滚动到新评论
+              if (listEl.style.display !== 'none') {
+                listEl.scrollTop = listEl.scrollHeight;
+              }
+            }
+          });
+        });
+      }
+      
+      // 统一的评论计数点击功能处理
+      function setupCommentCountClick() {
+        document.querySelectorAll('.comment-count').forEach(element => {
+          const newElement = element.cloneNode(true);
+          element.parentNode.replaceChild(newElement, element);
+          
+          newElement.addEventListener('click', function(event) {
+            event.stopPropagation(); // 阻止事件冒泡
+            const postId = this.getAttribute('data-post-id');
+            const commentInput = document.querySelector(`.comment-input[data-post-id="${postId}"]`);
+            commentInput.focus();
+          });
+        });
+      }
+      
+      // 统一初始化所有事件
+      function initAllEvents() {
+        // 移除旧的事件监听器的最佳方式是重新创建元素
+        setupLikeButtons();
+        setupCommentSubmitButtons();
+        setupCommentCountClick();
+        setupCommentsToggle();
+        setupScrollToBottomButtons();
+      }
+      
+      // 页面加载完成后初始化
+      document.addEventListener('DOMContentLoaded', function() {
+        // 初始化标签页导航
+        setupTabNavigation();
+        
+        // 初始化所有事件（只执行一次）
+        initAllEvents();
+        
+        // 监听帖子点击，更新用户兴趣
+        document.querySelectorAll('.post').forEach(post => {
+          post.addEventListener('click', function(event) {
+            // 如果点击的是交互元素，不更新兴趣
+            if (event.target.closest('.like-btn, .comment-submit, .comment-count, .comments-toggle, .scroll-to-bottom')) {
+              return;
+            }
+            
+            const circleText = this.querySelector('small').textContent;
+            const circleMatch = circleText.match(/in ([\w\s]+)/);
+            if (circleMatch && circleMatch[1]) {
+              const circle = circleMatch[1].split(' ·')[0];
+              updateUserInterest(circle);
+            }
+          });
+        });
+        
+        // 初始化新功能
+        initFavoriteButtons();
+        initSearch();
+        initCreatePost();
+        initMessageBar();
+        initPullToRefresh();
       });
       
-      // 点击评论数量可以聚焦到评论输入框
-      document.querySelectorAll('.comment-count').forEach(element => {
-        element.addEventListener('click', function() {
-          const postId = this.getAttribute('data-post-id');
-          const commentInput = document.querySelector(`.comment-input[data-post-id="${postId}"]`);
-          commentInput.focus();
-        });
-      });
-      
-      // 评论展开/收起功能
-      document.querySelectorAll('.comments-toggle').forEach(element => {
-        element.addEventListener('click', function() {
+      // 统一的评论展开/收起功能
+      function setupCommentsToggle() {
+        document.querySelectorAll('.comments-toggle').forEach(element => {
+          // 移除可能存在的旧事件监听器
+          const newElement = element.cloneNode(true);
+          element.parentNode.replaceChild(newElement, element);
+          
+          newElement.addEventListener('click', function(event) {
+            event.stopPropagation(); // 阻止事件冒泡
             const postId = this.getAttribute('data-post-id');
             const commentsList = document.querySelector(`.comments-list[data-post-id="${postId}"]`);
             const commentCount = document.querySelector(`.comment-count[data-post-id="${postId}"] .count`).textContent;
             
-            // 修复评论展开问题
-            if (commentsList.style.display === 'none' || commentsList.style.display === '') {
-              // 重置所有样式
-              commentsList.style = '';
-              commentsList.style.display = 'block';
-              commentsList.style.opacity = '0';
-              commentsList.style.transform = 'translateY(-10px)';
-              commentsList.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-              
-              // 触发重排后应用动画
-              setTimeout(() => {
-                commentsList.style.opacity = '1';
-                commentsList.style.transform = 'translateY(0)';
-              }, 10);
-              
-              this.textContent = 'Hide Comments';
-              this.classList.add('active');
-            } else {
-              // 添加收起动画
-              commentsList.style.opacity = '0';
-              commentsList.style.transform = 'translateY(-10px)';
-              
-              setTimeout(() => {
-                commentsList.style.display = 'none';
-              }, 300);
-              
-              this.textContent = `Show Comments (${commentCount})`;
-              this.classList.remove('active');
+            try {
+              if (commentsList.style.display === 'none' || commentsList.style.display === '') {
+                // 重置所有样式
+                commentsList.style = '';
+                commentsList.style.display = 'block';
+                commentsList.style.opacity = '0';
+                commentsList.style.transform = 'translateY(-10px)';
+                commentsList.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                commentsList.style.maxHeight = '300px';
+                commentsList.style.overflowY = 'auto';
+                commentsList.style.position = 'relative';
+                
+                // 触发重排后应用动画
+                setTimeout(() => {
+                  if (commentsList) { // 再次检查元素是否存在
+                    commentsList.style.opacity = '1';
+                    commentsList.style.transform = 'translateY(0)';
+                  }
+                }, 10);
+                
+                this.textContent = 'Hide Comments';
+                this.classList.add('active');
+              } else {
+                // 添加收起动画
+                commentsList.style.opacity = '0';
+                commentsList.style.transform = 'translateY(-10px)';
+                
+                setTimeout(() => {
+                  if (commentsList) { // 再次检查元素是否存在
+                    commentsList.style.display = 'none';
+                  }
+                }, 300);
+                
+                this.textContent = `Show Comments (${commentCount})`;
+                this.classList.remove('active');
+              }
+            } catch (error) {
+              console.error('Error in comment toggle:', error);
             }
           });
-      });
+        });
+      }
       
-      // 简单直接的滚动到底部功能
-      window.addEventListener('DOMContentLoaded', function() {
-        // 为每个滚动按钮添加点击事件
+      // 统一的滚动到底部功能
+      function setupScrollToBottomButtons() {
         document.querySelectorAll('.scroll-to-bottom').forEach(button => {
-          // 使用内联onclick属性，确保最直接的事件处理
-          button.onclick = function() {
+          // 移除可能存在的旧事件监听器
+          const newButton = button.cloneNode(true);
+          button.parentNode.replaceChild(newButton, button);
+          
+          newButton.addEventListener('click', function(event) {
+            event.stopPropagation(); // 阻止事件冒泡
             // 获取对应的评论列表
             const postId = this.getAttribute('data-post-id');
             const commentsList = document.querySelector(`.comments-list[data-post-id="${postId}"]`);
             
-            if (commentsList) {
-              // 确保评论列表有滚动功能
-              commentsList.style.maxHeight = '300px';
-              commentsList.style.overflowY = 'auto';
-              
-              // 直接滚动到底部
-              commentsList.scrollTop = commentsList.scrollHeight;
-              
-              // 视觉反馈
-              this.style.transform = 'scale(0.9)';
-              setTimeout(() => {
-                this.style.transform = 'scale(1)';
-              }, 150);
+            try {
+              if (commentsList) {
+                // 确保评论列表有滚动功能
+                commentsList.style.maxHeight = '300px';
+                commentsList.style.overflowY = 'auto';
+                commentsList.style.position = 'relative';
+                
+                // 直接滚动到底部
+                commentsList.scrollTop = commentsList.scrollHeight;
+                
+                // 视觉反馈
+                this.style.transform = 'scale(0.9)';
+                setTimeout(() => {
+                  if (this) { // 再次检查按钮是否存在
+                    this.style.transform = 'scale(1)';
+                  }
+                }, 150);
+              }
+            } catch (error) {
+              console.error('Error in scroll to bottom:', error);
             }
-          };
+          });
         });
-      });
+      }
       
-      // 确保所有评论列表在显示时都有滚动功能
-      document.querySelectorAll('.comments-toggle').forEach(toggle => {
-        toggle.addEventListener('click', function() {
-          const postId = this.getAttribute('data-post-id');
-          setTimeout(() => {
-            const commentsList = document.querySelector(`.comments-list[data-post-id="${postId}"]`);
-            if (commentsList && commentsList.style.display !== 'none') {
-              commentsList.style.maxHeight = '300px';
-              commentsList.style.overflowY = 'auto';
-              commentsList.style.position = 'relative';
-            }
-          }, 100);
-        });
-      });
+      // 更新评论功能，用于新添加的帖子 - 现在使用完整的初始化函数
+      function updateCommentFeatures() {
+        initPostEvents();
+      }
     </script>
   </body>
 </html>

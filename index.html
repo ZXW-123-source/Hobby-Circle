@@ -48,17 +48,17 @@
   .card:hover{transform:translateY(0) scale(1.02);box-shadow:0 12px 30px rgba(16,24,40,0.12)}
     .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px;margin-top:14px}
     .card{background:var(--card);border-radius:12px;padding:12px;box-shadow:0 6px 18px rgba(16,24,40,0.04);overflow:hidden}
-  .card .meta{display:flex;gap:8px;align-items:center;margin-top:8px}
+  .card .meta{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:nowrap}
   .card .badge{background:#eef4ff;color:var(--accent);padding:4px 8px;border-radius:999px;font-size:12px;font-weight:700}
   .card .members{margin-left:auto;color:var(--muted);font-size:12px}
-  .card .actions{display:flex;gap:8px;align-items:center;margin-top:10px}
+  .card .actions{display:flex;gap:8px;align-items:center;margin-top:14px}
   .card .actions button{background:none;border:1px solid transparent;padding:6px 8px;border-radius:8px;cursor:pointer;font-weight:700}
   .card .actions button.icon{display:inline-flex;align-items:center;gap:6px;border:1px solid #eef4ff;background:#fff}
   .card .actions button.icon.liked{color:#d23f3f;background:rgba(210,63,63,0.06);border-color:rgba(210,63,63,0.08)}
   .card .actions .join{margin-left:auto;background:var(--accent);color:#fff;padding:6px 10px;border-radius:8px}
   .meta .members-count{font-weight:700}
     .card img{width:100%;height:140px;object-fit:cover;border-radius:8px}
-    .card h3{margin:10px 0 6px;font-size:16px}
+    .card h3{margin:10px 0 6px;font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .card p{margin:0;color:var(--muted);font-size:13px}
     footer{padding:18px 28px;color:var(--muted);font-size:13px;border-top:1px solid #e6eef9}
   @media (max-width:700px){
@@ -98,7 +98,7 @@
       <div class="intro">
         <h1>Find people who love what you love</h1>
         <p>Create or join interest circles for photography, reading, sports and more. Share updates, images and connect.</p>
-        <a class="cta" href="#">Get Started</a>
+        <a class="cta" href="circles.html">Get Started</a>
       </div>
     <div class="hero-image" aria-hidden="true"></div>
     </section>
@@ -179,11 +179,7 @@
       // run after load to trigger intro animation
       document.addEventListener('DOMContentLoaded', ()=>{
         requestAnimationFrame(()=> hero && hero.classList.add('loaded'));
-        // CTA smooth scroll to next section
-        const cta = document.querySelector('.cta');
-        if(cta && nextSection){
-          cta.addEventListener('click', function(e){ e.preventDefault(); nextSection.scrollIntoView({behavior:'smooth'}); });
-        }
+        // CTA now links directly to circles page
         // Parallax removed: avoid changing backgroundPosition which can clip or shift the image
         // Reveal cards with IntersectionObserver
         const cards = document.querySelectorAll('.card');
