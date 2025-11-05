@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Hobby Circle — Sign Up</title>
   <style>
+  /* 平滑滚动 */
+  html{
+    scroll-behavior: smooth;
+  }
     :root{--accent:#2b8cff;--bg:#f7f9fc;--muted:#6b7280;--success:#10b981;--error:#ef4444}
     body{margin:0;font-family:Inter,Segoe UI,Helvetica,Arial;background:var(--bg);color:#111;line-height:1.6}
     header{background:linear-gradient(90deg,#fff 0%,rgba(255,255,255,0.8) 100%);padding:14px 22px;display:flex;align-items:center;gap:14px;box-shadow:0 2px 10px rgba(0,0,0,0.05);position:sticky;top:0;z-index:100}
@@ -413,11 +417,11 @@
         
         // Social login handlers
         wechatLoginBtn.addEventListener('click', function() {
-          showNotification(errorNotification, 'WeChat login functionality is not implemented yet.');
+          showNotification('WeChat login functionality is not implemented yet.');
         });
         
         googleLoginBtn.addEventListener('click', function() {
-          showNotification(errorNotification, 'Google login functionality is not implemented yet.');
+          showNotification('Google login functionality is not implemented yet.');
         });
         
         // Initialize - just disable the button without showing errors

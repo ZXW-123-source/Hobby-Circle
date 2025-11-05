@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Hobby Circle — Feed</title>
   <style>
+  /* 平滑滚动 */
+  html{
+    scroll-behavior: smooth;
+  }
     :root{--accent:#2b8cff;--bg:#f7f9fc;--card:#ffffff;--muted:#6b7280}
     body{margin:0;font-family:Inter,Segoe UI,Helvetica,Arial;background:var(--bg);color:#111}
     header{background:linear-gradient(90deg,#fff 0%,rgba(255,255,255,0.8) 100%);padding:14px 22px;display:flex;align-items:center;gap:14px}
@@ -194,12 +198,58 @@
   font-weight: bold;
 }
 .scroll-to-bottom:hover {
-  background: #1a6fe0;
-  transform: translateY(-2px);
-}
-.scroll-to-bottom:active {
-  transform: translateY(0);
-}
+      background: #1a6fe0;
+      transform: translateY(-2px);
+    }
+    .scroll-to-bottom:active {
+      transform: translateY(0);
+    }
+    
+    /* 响应式设计样式 */
+    @media (max-width:700px){
+      header{padding:12px 16px;flex-wrap:wrap;justify-content:space-between}
+      nav{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+      nav a{padding:6px 8px;font-size:14px}
+      main{padding:12px 16px;padding-bottom:100px}
+      .post{margin-bottom:12px}
+      .feed-header{margin-bottom:16px}
+      .feed-nav{gap:6px;padding:4px}
+      .nav-btn{padding:8px 12px;font-size:14px}
+      
+      /* 修复搜索栏在移动端的显示 */
+      .search-container{margin-bottom:16px}
+      .search-input{padding:10px 12px 10px 36px;font-size:14px}
+      
+      /* 修复底部消息栏在移动端的显示 */
+      .message-bar{padding:8px 16px}
+      .message-icon{font-size:18px}
+      
+      /* 修复创建帖子按钮在移动端的显示 */
+      .create-post-btn{bottom:70px;right:16px;width:48px;height:48px;font-size:20px}
+      
+      /* 修复模态框在移动端的显示 */
+      .modal-content{width:95%;padding:16px;margin:16px}
+      
+      /* 修复评论区域在移动端的显示 */
+      .comment-section{display:flex;flex-direction:column}
+      .comment-input{width:100% !important;margin-bottom:8px}
+      .comment-submit{width:100%}
+      .comments-list{padding:10px;max-height:200px}
+      
+      /* 修复帖子操作按钮在移动端的显示 */
+      .post-actions{gap:12px}
+      .like-btn, .comment-count{font-size:14px}
+      
+      /* 修复滚动到底部按钮在移动端的显示 */
+      .scroll-to-bottom{width:32px;height:32px;font-size:16px}
+    }
+    
+    @media (max-width:480px){
+      .post{padding:10px}
+      .modal-content{padding:12px}
+      .modal-header h3{font-size:18px}
+      .nav-btn{padding:6px 8px;font-size:13px}
+    }
 .comment-item {
   margin: 8px 0;
   padding: 8px 10px;
@@ -329,7 +379,7 @@
         <strong>Bob</strong> <small style="color:var(--muted)">in Photography · 6h</small>
       </div>
       <p>Golden hour photos from last weekend.</p>
-      <img src="images/cityphotography.jpg" alt="golden hour">
+      <img src="images/glodenhour.jpg" alt="golden hour">
       <div class="post-actions">
           <button class="like-btn" data-post-id="2">
             <span class="heart-icon">❤</span>

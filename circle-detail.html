@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Hobby Circle — Circle Details</title>
   <style>
+  /* 平滑滚动 */
+  html{
+    scroll-behavior: smooth;
+  }
     :root{--accent:#2b8cff;--bg:#f7f9fc;--card:#ffffff;--muted:#6b7280}
     *{box-sizing:border-box}
     body{margin:0;font-family:Inter,Segoe UI,Helvetica,Arial;background:var(--bg);color:#111}
@@ -1812,8 +1816,8 @@ function initPage() {
           tags: ['Books', 'Reading', 'Literature', 'Fiction', 'Non-fiction'],
           members: 860,
           posts: 56,
-          icon: 'images/reading club.jpg',
-          cover: 'images/reading club.jpg'
+          icon: 'images/readingclub.jpg',
+          cover: 'images/readingclub.jpg'
         },
         'circle_bakery': {
           id: 'circle_bakery',
@@ -1844,12 +1848,84 @@ function initPage() {
           posts: 63,
           icon: 'images/movie.jpg',
           cover: 'images/movie.jpg'
+        },
+        'circle_sports': {
+          id: 'circle_sports',
+          name: 'Sports & Fitness',
+          description: 'Join our active community for workout partners, fitness tips, and local sports events. Whether you\'re into running, yoga, weightlifting, or team sports, you\'ll find motivation and support here.',
+          tags: ['Fitness', 'Sports', 'Workout', 'Health', 'Exercise'],
+          members: 940,
+          posts: 47,
+          icon: 'images/sports.jpg',
+          cover: 'images/sports.jpg'
+        },
+        'circle_art': {
+          id: 'circle_art',
+          name: 'Arts & Crafts',
+          description: 'A creative space for DIY projects, art tutorials, and inspiration. Share your handmade creations, learn new techniques, and connect with fellow artists and crafters of all skill levels.',
+          tags: ['DIY', 'Art', 'Crafts', 'Painting', 'Drawing'],
+          members: 720,
+          posts: 35,
+          icon: 'images/art.jpg',
+          cover: 'images/art.jpg'
+        },
+        // 直接使用无前缀的ID，确保能直接匹配
+        'photography': {
+          id: 'photography',
+          name: 'Photography',
+          description: 'Welcome to the Photography Circle, a vibrant community for photography enthusiasts...',
+          tags: ['Photography', 'Digital', 'Art', 'Landscape', 'Portrait'],
+          members: 1200,
+          posts: 42,
+          icon: 'images/cityphotography.jpg',
+          cover: 'images/cityphotography.jpg'
+        },
+        'reading': {
+          id: 'reading',
+          name: 'Reading Club',
+          description: 'Join our vibrant book club for literary discussions, author spotlights, and recommendations...',
+          tags: ['Books', 'Reading', 'Literature', 'Fiction', 'Non-fiction'],
+          members: 860,
+          posts: 56,
+          icon: 'images/readingclub.jpg',
+          cover: 'images/readingclub.jpg'
+        },
+        'sports': {
+          id: 'sports',
+          name: 'Sports & Fitness',
+          description: 'Join our active community for workout partners, fitness tips, and local sports events. Whether you\'re into running, yoga, weightlifting, or team sports, you\'ll find motivation and support here.',
+          tags: ['Fitness', 'Sports', 'Workout', 'Health', 'Exercise'],
+          members: 940,
+          posts: 47,
+          icon: 'images/sports.jpg',
+          cover: 'images/sports.jpg'
+        },
+        'art': {
+          id: 'art',
+          name: 'Arts & Crafts',
+          description: 'A creative space for DIY projects, art tutorials, and inspiration. Share your handmade creations, learn new techniques, and connect with fellow artists and crafters of all skill levels.',
+          tags: ['DIY', 'Art', 'Crafts', 'Painting', 'Drawing'],
+          members: 720,
+          posts: 35,
+          icon: 'images/art.jpg',
+          cover: 'images/art.jpg'
         }
       };
 
-      if (circles[circleId]) {
-        currentCircle = { ...circles[circleId], isMember: false };
+      // 尝试直接查找circleId，如果找不到，再尝试添加circle_前缀
+      let circleData = circles[circleId];
+      
+      // 如果直接查找失败，尝试添加前缀
+      if (!circleData && !circleId.startsWith('circle_')) {
+        circleData = circles['circle_' + circleId];
+      }
+      
+      if (circleData) {
+        currentCircle = { ...circleData, isMember: false };
         updateCircleDisplay();
+      } else {
+        // 如果还是找不到，打印警告信息
+        console.warn('Circle not found:', circleId);
       }
     }
 
@@ -1857,10 +1933,27 @@ function initPage() {
     function updateCircleDisplay() {
       document.getElementById('circleName').textContent = currentCircle.name;
       document.getElementById('circleDescription').textContent = currentCircle.description;
-      document.getElementById('circleIcon').src = currentCircle.icon;
-      document.getElementById('circleIcon').alt = currentCircle.name;
-      document.getElementById('circleCover').src = currentCircle.cover;
-      document.getElementById('circleCover').alt = currentCircle.name + ' Cover';
+      
+      // 设置图标图片，添加错误处理
+      const circleIcon = document.getElementById('circleIcon');
+      circleIcon.src = currentCircle.icon;
+      circleIcon.alt = currentCircle.name;
+      circleIcon.onerror = function() {
+        console.warn('Failed to load circle icon:', currentCircle.icon);
+        // 如果图片加载失败，显示一个占位图片
+        this.src = 'images/logo.jpg'; // 使用logo作为备用图片
+      };
+      
+      // 设置封面图片，添加错误处理
+      const circleCover = document.getElementById('circleCover');
+      circleCover.src = currentCircle.cover;
+      circleCover.alt = currentCircle.name + ' Cover';
+      circleCover.onerror = function() {
+        console.warn('Failed to load circle cover:', currentCircle.cover);
+        // 如果图片加载失败，显示一个占位图片
+        this.src = 'images/logo.jpg'; // 使用logo作为备用图片
+      };
+      
       document.getElementById('membersCount').textContent = formatNumber(currentCircle.members);
       document.getElementById('postsCount').textContent = currentCircle.posts;
       
