@@ -449,18 +449,127 @@
       
       <div id="discover-tab" class="feed-tab">
         <h3>Discover New Content</h3>
-        <!-- 这里将通过JavaScript动态添加推荐内容 -->
+        <section class="post">
+          <button class="favorite-btn" data-post-id="discover-1">☆</button>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <img src="images/user5.jpg" alt="Emma" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+            <strong>Emma</strong> <small style="color:var(--muted)">in Art · 3h</small>
+          </div>
+          <p>Visited the new modern art exhibition downtown - amazing pieces!</p>
+          <img src="images/art.jpg" alt="art exhibition">
+          <div class="post-actions">
+              <button class="like-btn" data-post-id="discover-1">
+                <span class="heart-icon">❤</span>
+                <span class="like-count">143</span>
+              </button>
+            <div class="comment-count" data-post-id="discover-1">
+                <span class="comment-icon">💬</span>
+                <span class="count">2</span>
+              </div>
+          </div>
+          <div class="comment-section">
+            <input type="text" class="comment-input" placeholder="Add a comment..." data-post-id="discover-1">
+            <button class="comment-submit" data-post-id="discover-1">Post Comment</button>
+            <div class="comments-toggle" data-post-id="discover-1">Show Comments (2)</div>
+            <div class="comments-list" data-post-id="discover-1" style="display: none;">
+              <!-- 评论内容 -->
+              <div class="comment-item">
+                <span class="comment-user">John:</span>
+                <span class="comment-content">Which exhibition is this? Looks fascinating!</span>
+              </div>
+              <div class="comment-item">
+                <span class="comment-user">Sarah:</span>
+                <span class="comment-content">Downtown Modern Art Museum - it's worth a visit!</span>
+              </div>
+              <button class="scroll-to-bottom" data-post-id="discover-1">▼</button>
+            </div>
+          </div>
+        </section>
+        
+        <section class="post">
+          <button class="favorite-btn" data-post-id="discover-2">☆</button>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <img src="images/user6.jpg" alt="Sophia" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+            <strong>Sophia</strong> <small style="color:var(--muted)">in Reading · 5h</small>
+          </div>
+          <p>Our monthly book recommendation - this novel will change your perspective!</p>
+          <img src="images/readingclub.jpg" alt="book club">
+          <div class="post-actions">
+              <button class="like-btn" data-post-id="discover-2">
+                <span class="heart-icon">❤</span>
+                <span class="like-count">89</span>
+              </button>
+            <div class="comment-count" data-post-id="discover-2">
+                <span class="comment-icon">💬</span>
+                <span class="count">2</span>
+              </div>
+          </div>
+          <div class="comment-section">
+            <input type="text" class="comment-input" placeholder="Add a comment..." data-post-id="discover-2">
+            <button class="comment-submit" data-post-id="discover-2">Post Comment</button>
+            <div class="comments-toggle" data-post-id="discover-2">Show Comments (2)</div>
+            <div class="comments-list" data-post-id="discover-2" style="display: none;">
+              <!-- 评论内容 -->
+              <div class="comment-item">
+                <span class="comment-user">Michael:</span>
+                <span class="comment-content">What's the name of the book? Sounds interesting!</span>
+              </div>
+              <div class="comment-item">
+                <span class="comment-user">Olivia:</span>
+                <span class="comment-content">It's "The Song of Achilles" - a beautiful retelling!</span>
+              </div>
+              <button class="scroll-to-bottom" data-post-id="discover-2">▼</button>
+            </div>
+          </div>
+        </section>
+        
+        <section class="post">
+          <button class="favorite-btn" data-post-id="discover-3">☆</button>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <img src="images/user7.jpg" alt="Isabella" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+            <strong>Isabella</strong> <small style="color:var(--muted)">in Music · 1d</small>
+          </div>
+          <p>Just discovered this amazing indie band - check out their latest album!</p>
+          <img src="images/music.jpg" alt="music album">
+          <div class="post-actions">
+              <button class="like-btn" data-post-id="discover-3">
+                <span class="heart-icon">❤</span>
+                <span class="like-count">215</span>
+              </button>
+            <div class="comment-count" data-post-id="discover-3">
+                <span class="comment-icon">💬</span>
+                <span class="count">2</span>
+              </div>
+          </div>
+          <div class="comment-section">
+            <input type="text" class="comment-input" placeholder="Add a comment..." data-post-id="discover-3">
+            <button class="comment-submit" data-post-id="discover-3">Post Comment</button>
+            <div class="comments-toggle" data-post-id="discover-3">Show Comments (2)</div>
+            <div class="comments-list" data-post-id="discover-3" style="display: none;">
+              <!-- 评论内容 -->
+              <div class="comment-item">
+                <span class="comment-user">David:</span>
+                <span class="comment-content">Which band is this? I'm always looking for new music!</span>
+              </div>
+              <div class="comment-item">
+                <span class="comment-user">Emily:</span>
+                <span class="comment-content">It's The Paper Kites - their latest album is fantastic!</span>
+              </div>
+              <button class="scroll-to-bottom" data-post-id="discover-3">▼</button>
+            </div>
+          </div>
+        </section>
       </div>
       
       <div id="nearby-tab" class="feed-tab">
         <h3>Nearby Posts</h3>
         <section class="post">
           <div style="display: flex; align-items: center; gap: 8px;">
-            <img src="images/user3.jpg" alt="Local Baker" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
-            <strong>Local Baker</strong> <small style="color:var(--muted)">in Bakery · 1h · 500m away</small>
+            <img src="images/user3.jpg" alt="John" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+            <strong>John</strong> <small style="color:var(--muted)">in Bakery · 1h · 500m away</small>
           </div>
           <p>Fresh bread available at our pop-up shop today!</p>
-          <img src="images/bakeryshop.jpg" alt="bakery shop">
+          <img src="images/backeryshop.jpg" alt="bakery shop" style="width: 100%; height: auto; object-fit: cover; max-height: 400px; border-radius: 8px;">
           <div class="post-actions">
               <button class="like-btn" data-post-id="3">
                 <span class="heart-icon">❤</span>
@@ -468,21 +577,21 @@
               </button>
             <div class="comment-count" data-post-id="3">
                 <span class="comment-icon">💬</span>
-                <span class="count">8</span>
+                <span class="count">2</span>
               </div>
           </div>
           <div class="comment-section">
               <input type="text" class="comment-input" placeholder="Add a comment..." data-post-id="3">
                 <button class="comment-submit" data-post-id="3">Post Comment</button>
-                <div class="comments-toggle" data-post-id="3">Show Comments (8)</div>
+                <div class="comments-toggle" data-post-id="3">Show Comments (2)</div>
                 <div class="comments-list" data-post-id="3" style="display: none;">
                   <!-- 评论内容 -->
                   <div class="comment-item">
-                    <span class="comment-user">Local Fan:</span>
+                    <span class="comment-user">Emma:</span>
                     <span class="comment-content">I'll be there! What time?</span>
                   </div>
                   <div class="comment-item">
-                    <span class="comment-user">Local Baker:</span>
+                    <span class="comment-user">Thomas:</span>
                     <span class="comment-content">10am-4pm today!</span>
                   </div>
                   <button class="scroll-to-bottom" data-post-id="3">▼</button>
@@ -492,11 +601,11 @@
         
         <section class="post">
           <div style="display: flex; align-items: center; gap: 8px;">
-            <img src="images/user4.jpg" alt="Urban Photographer" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
-            <strong>Urban Photographer</strong> <small style="color:var(--muted)">in Photography · 3h · 1.2km away</small>
+            <img src="images/user4.jpg" alt="Michael" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+            <strong>Michael</strong> <small style="color:var(--muted)">in Photography · 3h · 1.2km away</small>
           </div>
           <p>Just captured this amazing cityscape from the rooftop!</p>
-          <img src="images/rooftop.jpg" alt="rooftop view">
+          <img src="images/rooftop.jpg" alt="rooftop view" style="width: 100%; height: auto; object-fit: cover; max-height: 400px; border-radius: 8px;">
           <div class="post-actions">
               <button class="like-btn" data-post-id="4">
                 <span class="heart-icon">❤</span>
@@ -504,21 +613,21 @@
               </button>
             <div class="comment-count" data-post-id="4">
                 <span class="comment-icon">💬</span>
-                <span class="count">15</span>
+                <span class="count">2</span>
               </div>
           </div>
           <div class="comment-section">
               <input type="text" class="comment-input" placeholder="Add a comment..." data-post-id="4">
                 <button class="comment-submit" data-post-id="4">Post Comment</button>
-                <div class="comments-toggle" data-post-id="4">Show Comments (15)</div>
+                <div class="comments-toggle" data-post-id="4">Show Comments (2)</div>
                 <div class="comments-list" data-post-id="4" style="display: none;">
                   <!-- 评论内容 -->
                   <div class="comment-item">
-                    <span class="comment-user">City Explorer:</span>
+                    <span class="comment-user">James:</span>
                     <span class="comment-content">Wow! Where is this rooftop?</span>
                   </div>
                   <div class="comment-item">
-                    <span class="comment-user">Urban Photographer:</span>
+                    <span class="comment-user">Sophia:</span>
                     <span class="comment-content">Downtown area, near Central Park.</span>
                   </div>
                   <button class="scroll-to-bottom" data-post-id="4">▼</button>
@@ -583,8 +692,33 @@
     </div>
   </div>
   </main>
-  <footer style="padding:14px 22px;color:var(--muted)">© 2025 Hobby Circle — Feed (demo)</footer>
     <script>
+      // 检查用户登录状态并获取用户信息
+      function checkUserLogin() {
+        try {
+          const isLoggedIn = localStorage.getItem('isLoggedIn');
+          const userData = localStorage.getItem('currentUser');
+          
+          if (isLoggedIn === 'true' && userData) {
+            const user = JSON.parse(userData);
+            console.log('User logged in:', user.username);
+            // 这里可以添加代码来显示用户信息在页面上
+            return user;
+          }
+          
+          // 检查cookie作为备选
+          if (document.cookie.includes('user_logged_in=true')) {
+            console.log('User logged in via cookie');
+          }
+        } catch (error) {
+          console.error('Error checking login status:', error);
+        }
+        return null;
+      }
+      
+      // 页面加载时立即检查用户登录状态
+      const currentUser = checkUserLogin();
+      
       // 用户兴趣数据 - 模拟用户浏览历史
       const userInterests = {
         'Bakery': 85,    // 浏览量
@@ -1805,5 +1939,11 @@
         initPostEvents();
       }
     </script>
-  </body>
+  <footer style="text-align:center; font-size:16px">© 2025 Hobby Circle — Connect WIth Your Passions</footer>
+  <footer>
+    <div class="contact-info">
+      <p>contact us: <a href="mailto:contact@hobbycircle.com">contact@hobbycircle.com</a></p>
+    </div>
+  </footer>
+    </body>
 </html>

@@ -93,6 +93,13 @@
     .btn:disabled{
       background-color:#ccc;cursor:not-allowed;transform:none;box-shadow:none;
     }
+    .btn.success{
+      background-color:var(--success);
+    }
+    .btn.success:hover:not(:disabled){
+      background:#059669;
+      box-shadow:0 4px 12px rgba(16,185,129,0.3);
+    }
     .btn-block{width:100%}
     .form-footer{text-align:center;margin-top:24px;color:var(--muted);font-size:14px}
     .form-footer a{color:var(--accent);text-decoration:none}
@@ -306,8 +313,10 @@
   <div id="error-notification" class="notification error">
     Please fill in all required fields correctly.
   </div>
+  
+  <!-- Debug Panel removed -->
 
-  <footer>© 2025 Hobby Circle — Connect Through Your Passions</footer>
+  <footer style="text-align:center; font-size:16px">© 2025 Hobby Circle — Connect With Your Passions</footer>
 
   <script>
       document.addEventListener('DOMContentLoaded', function() {
@@ -405,14 +414,27 @@
         });
         
         // Real-time validation
-        usernameInput.addEventListener('input', validateUsername);
-        displayNameInput.addEventListener('input', validateDisplayName);
-        emailInput.addEventListener('input', validateEmail);
+        usernameInput.addEventListener('input', function() {
+          validateUsername();
+          checkFormValidity();
+        });
+        displayNameInput.addEventListener('input', function() {
+          validateDisplayName();
+          checkFormValidity();
+        });
+        emailInput.addEventListener('input', function() {
+          validateEmail();
+          checkFormValidity();
+        });
         passwordInput.addEventListener('input', function() {
           validatePassword();
           updatePasswordStrength();
+          checkFormValidity();
         });
-        bioInput.addEventListener('input', validateBio);
+        bioInput.addEventListener('input', function() {
+          validateBio();
+          checkFormValidity();
+        });
         termsCheckbox.addEventListener('change', checkFormValidity);
         
         // Social login handlers
@@ -489,8 +511,8 @@
           const password = passwordInput.value;
           const passwordMessage = document.getElementById('password-message');
           
-          // Password must be at least 8 characters and contain at least one uppercase letter, one lowercase letter, and one number
-          const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+          // Simplified password rule: at least 6 characters
+          const passwordRegex = /^.{6,}$/;
           
           if (!passwordRegex.test(password)) {
             passwordInput.classList.add('error');
@@ -567,77 +589,228 @@
           const isDisplayNameValid = validateDisplayName();
           const isEmailValid = validateEmail();
           const isPasswordValid = validatePassword();
-          const isBioValid = validateBio(); // Bio is now optional but still needs validation if filled
+          const isBioValid = validateBio();
           const isAvatarSelected = selectedAvatarInput.value !== '';
           const isCirclesSelected = selectedCirclesInput.value !== '';
           const isTermsChecked = termsCheckbox.checked;
+          
+          // Debug information
+          console.log('Form validation status:');
+          console.log('- Username valid:', isUsernameValid);
+          console.log('- Display name valid:', isDisplayNameValid);
+          console.log('- Email valid:', isEmailValid);
+          console.log('- Password valid:', isPasswordValid);
+          console.log('- Bio valid:', isBioValid);
+          console.log('- Avatar selected:', isAvatarSelected);
+          console.log('- Circles selected:', isCirclesSelected);
+          console.log('- Terms checked:', isTermsChecked);
           
           // Enable create account button only if all fields are valid
           createAccountBtn.disabled = !(isUsernameValid && isDisplayNameValid && isEmailValid && 
                                       isPasswordValid && isBioValid && isAvatarSelected && 
                                       isCirclesSelected && isTermsChecked);
+          
+          // 添加按钮样式变化，当表单有效时按钮变为绿色
+          if (!createAccountBtn.disabled) {
+            createAccountBtn.classList.add('success');
+          } else {
+            createAccountBtn.classList.remove('success');
+          }
         }
         
-        // Form submission
+        // 表单提交事件处理
         signupForm.addEventListener('submit', function(e) {
           e.preventDefault();
           
-          // Form validation (additional check)
+          // 简化的字段验证和获取
           const username = usernameInput.value.trim();
           const displayName = displayNameInput.value.trim();
           const email = emailInput.value.trim();
           const password = passwordInput.value;
           const avatar = selectedAvatarInput.value;
           const circles = selectedCirclesInput.value;
-          const bio = bioInput.value.trim();
           
-          // Final validation
-          if (!username || !displayName || !email || !password || !avatar || !circles) {
-            showNotification(errorNotification, 'Please fill in all required fields.');
+          // 基本验证
+          if (!username || !displayName || !email || !password || !avatar || !circles || !termsCheckbox.checked) {
+            // 显示具体错误信息
+            if (!username) showNotification('Please enter a username');
+            else if (!displayName) showNotification('Please enter a display name');
+            else if (!email) showNotification('Please enter an email address');
+            else if (!password) showNotification('Please enter a password');
+            else if (!avatar) showNotification('Please select a profile picture');
+            else if (!circles) showNotification('Please select at least one interest');
+            else showNotification('Please agree to the terms and conditions');
             return;
           }
           
-          // Store user data in localStorage (simulating account creation)
-          const userData = {
-            username,
-            displayName,
-            email,
-            avatar,
+          // 创建最小化的用户数据对象，确保使用当前日期
+          // 获取准确的当前日期，使用本地时间而非UTC
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, '0');
+      const day = String(today.getDate()).padStart(2, '0');
+      const formattedDate = `${year}-${month}-${day}`;
+          
+          const simpleUserData = {
+            username: username,
+            displayName: displayName,
+            email: email,
+            avatar: avatar,
             circles: circles.split(','),
-            bio,
-            joinedDate: new Date().toISOString()
+            createdAt: formattedDate
           };
           
-          localStorage.setItem('currentUser', JSON.stringify(userData));
-          localStorage.setItem('isLoggedIn', 'true');
-          
-          // Show success notification
-          showNotification(successNotification);
-          
-          // Redirect to feed after 2 seconds
-          setTimeout(() => {
-            window.location.href = 'feed.html';
-          }, 2000);
+          // 增强的localStorage存储和验证
+          try {
+            // 先尝试写入，然后立即验证
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('currentUser', JSON.stringify(simpleUserData));
+            
+            // 验证写入是否成功
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const storedUser = localStorage.getItem('currentUser');
+            
+            if (isLoggedIn === 'true' && storedUser) {
+              // 使用showNotification函数显示成功消息
+              showNotification('Account created successfully!');
+              
+              // 为了确保数据持久化，添加一个简单的cookie作为备选
+              document.cookie = 'user_logged_in=true; path=/; max-age=3600';
+              
+              // 解析用户数据
+              const userData = JSON.parse(storedUser);
+              
+              // 显示用户信息
+              showUserProfile(userData);
+            } else {
+              throw new Error('Failed to save user data to localStorage');
+            }
+          } catch (error) {
+            console.error('Storage error:', error);
+            // 显示错误信息
+            errorNotification.textContent = 'Error creating account: ' + error.message;
+            errorNotification.classList.add('show');
+          }
         });
         
-        // Show notification function
-        function showNotification(notificationElement, customMessage = null) {
-          // Update message if provided
-          if (customMessage) {
-            notificationElement.textContent = customMessage;
-          }
+        // 显示用户资料函数
+        function showUserProfile(userData) {
+          // 创建用户资料显示区域
+          const profileContainer = document.createElement('div');
+          profileContainer.className = 'user-profile-container';
+          profileContainer.style.cssText = `
+            background-color: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            text-align: center;
+            animation: fadeIn 0.5s ease-in-out;
+          `;
           
-          // Show notification
+          // 构建用户资料HTML
+          const profileHtml = `
+            <h2 style="margin-top: 0; color: #333;">Welcome, ${userData.displayName}!</h2>
+            <div style="margin: 20px 0;">
+              <img src="${userData.avatar}" alt="Your profile" 
+                   style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #4CAF50;">
+            </div>
+            <div style="text-align: left; max-width: 400px; margin: 0 auto;">
+              <p><strong>Username:</strong> ${userData.username}</p>
+              <p><strong>Email:</strong> ${userData.email}</p>
+              <p><strong>Interests:</strong> ${userData.circles.join(', ')}</p>
+              <p><strong>Member since:</strong> ${userData.createdAt}</p>
+            </div>
+            <button id="back-to-form-btn" style="
+              margin-top: 20px;
+              padding: 10px 20px;
+              background-color: #4CAF50;
+              color: white;
+              border: none;
+              border-radius: 6px;
+              cursor: pointer;
+              font-size: 16px;
+            ">Sign in with another account</button>
+          `;
+          
+          profileContainer.innerHTML = profileHtml;
+          
+          // 隐藏表单，显示用户资料
+          const signupForm = document.querySelector('form');
+          signupForm.style.display = 'none';
+          
+          // 将用户资料添加到页面
+          signupForm.parentNode.insertBefore(profileContainer, signupForm.nextSibling);
+          
+          // 添加返回表单按钮事件
+          document.getElementById('back-to-form-btn').addEventListener('click', function() {
+            profileContainer.remove();
+            signupForm.style.display = 'block';
+            // 重置表单
+            signupForm.reset();
+            // 重置选择状态
+            avatarPreviewItems.forEach(item => item.classList.remove('selected'));
+            circleOptions.forEach(option => option.classList.remove('selected'));
+            selectedCircles = [];
+            selectedCirclesInput.value = '';
+            selectedAvatarInput.value = '';
+            avatarPlaceholder.innerHTML = '<div class="avatar-placeholder-icon">+</div><div class="avatar-placeholder-text">Add Profile Picture</div>';
+            // 重置按钮状态
+            createAccountBtn.disabled = true;
+            createAccountBtn.classList.remove('success');
+          });
+        }
+        
+        // Show notification function
+        function showNotification(message) {
+          // 确保message是字符串
+          const messageStr = typeof message === 'string' ? message : '';
+          
+          // 使用适当的通知元素
+          const notificationElement = messageStr.includes('error') || messageStr.includes('Please') ? 
+            errorNotification : successNotification;
+          
+          // 更新消息内容
+          notificationElement.textContent = messageStr || (notificationElement === successNotification ? 
+            'Account created successfully!' : 
+            'Please fill in all required fields correctly.');
+          
+          // 显示通知
           notificationElement.classList.add('show');
           
-          // Hide notification after 3 seconds
+          // 3秒后隐藏通知
           setTimeout(() => {
             notificationElement.classList.remove('show');
           }, 3000);
         }
         
+        // 修改后的登录状态检查函数，避免在用户主动访问signup页面时立即重定向
+        function checkLoginStatus() {
+          try {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            // 只有当URL参数中明确指定要检查登录状态时才重定向
+            // 这样用户可以主动访问signup页面，而不会被强制重定向
+            const shouldCheckLogin = new URLSearchParams(window.location.search).get('checkLogin') === 'true';
+            
+            if (isLoggedIn === 'true' && shouldCheckLogin) {
+              window.location.replace('feed.html');
+            }
+          } catch (error) {
+            console.log('No existing login found');
+          }
+        }
+        
+        // 页面加载时检查登录状态，但不会强制重定向已登录用户
+        checkLoginStatus();
+        
 
       });
-  </script>
-</body>
+      </script>
+  </main>
+  <footer>
+    <div class="contact-info">
+      <p>contact us: <a href="mailto:contact@hobbycircle.com">contact@hobbycircle.com</a></p>
+    </div>
+  </footer>
+  </body>
 </html>
