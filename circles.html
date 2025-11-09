@@ -4,7 +4,108 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Hobby Circle — Circles</title>
-  <link rel="stylesheet" href="css/main.css">
+  <style>
+  /* 平滑滚动 */
+  html{
+    scroll-behavior: smooth;
+  }
+    :root{--accent:#2b8cff;--bg:#f7f9fc;--card:#ffffff;--muted:#6b7280}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,Segoe UI,Helvetica,Arial;background:var(--bg);color:#111}
+    header{background:linear-gradient(90deg,#fff 0%,rgba(255,255,255,0.8) 100%);padding:14px 22px;display:flex;align-items:center;gap:14px}
+    .logo img{height:40px;width:40px;object-fit:cover;border-radius:8px}
+    nav{margin-left:auto;display:flex;gap:12px;align-items:center}
+    nav a{color:var(--muted);text-decoration:none;font-weight:700;padding:6px 8px;border-radius:6px}
+    nav a:hover{color:var(--accent)}
+    main{padding:18px 22px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+    .card{background:var(--card);border-radius:10px;padding:12px;box-shadow:0 6px 18px rgba(16,24,40,0.04);position:relative}
+    .card img{width:100%;height:140px;object-fit:cover;border-radius:8px}
+    .card .meta{display:flex;gap:8px;align-items:center;margin-top:8px}
+    .card .badge{background:#eef4ff;color:var(--accent);padding:4px 8px;border-radius:999px;font-size:12px;font-weight:700}
+    .card .members{margin-left:auto;color:var(--muted);font-size:12px}
+    .card .actions{display:flex;gap:8px;align-items:center;margin-top:10px}
+    .card .actions button{background:none;border:1px solid transparent;padding:6px 8px;border-radius:8px;cursor:pointer;font-weight:700}
+    .card .actions button.icon{display:inline-flex;align-items:center;gap:6px;border:1px solid #eef4ff;background:#fff}
+    .card .actions button.icon.liked{color:#d23f3f;background:rgba(210,63,63,0.06);border-color:rgba(210,63,63,0.08)}
+    .card .actions .join{margin-left:auto;background:var(--accent);color:#fff;padding:6px 10px;border-radius:8px;transition:all 0.2s ease}    
+    .btn-joined{background:#4caf50 !important;color:white !important}
+    .btn-joined:hover{background:#45a049 !important}
+    .members-count{font-weight:700}
+    .create{background:linear-gradient(90deg,#fff,#f3f8ff);padding:16px;border-radius:10px;margin-bottom:18px}
+    form input,form textarea{width:100%;padding:8px;margin-top:8px;border:1px solid #e6eef9;border-radius:8px}
+    .btn{background:var(--accent);color:#fff;padding:8px 12px;border-radius:8px;display:inline-block;margin-top:8px;text-decoration:none}
+    .btn:hover{background:#1a76e8}
+    .btn-secondary{background:#f0f0f0;color:#333;margin-right:8px}
+    .btn-secondary:hover{background:#e0e0e0}
+    .image-option:hover{border-color:var(--accent)!important}
+    .image-option.selected{border-color:var(--accent)!important}
+    .edit-button{position:absolute;top:8px;right:8px;background:rgba(255,255,255,0.8);border:none;border-radius:4px;padding:4px 8px;font-size:12px;cursor:pointer;opacity:0;transition:opacity 0.3s}
+    .card:hover .edit-button{opacity:1}
+    .edit-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000;justify-content:center;align-items:center}
+    .edit-modal-content{background:white;padding:24px;border-radius:10px;width:90%;max-width:500px;max-height:90vh;overflow-y:auto}
+    .edit-modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .edit-modal-header h3{margin:0}
+    .edit-modal-close{background:none;border:none;font-size:24px;cursor:pointer}
+    .success-message{background:#e6f7ee;color:#00873d;padding:12px;border-radius:8px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+    /* 评论相关样式 */
+    .comments-container{margin-top:12px;padding:12px;background:#f5f5f5;border-radius:8px;box-shadow:inset 0 1px 3px rgba(0,0,0,0.05);display:none}
+    .comments-list{max-height:200px;overflow-y:auto;position:relative;scrollbar-width:thin;scrollbar-color:var(--accent) transparent}
+    .comments-list::-webkit-scrollbar{width:6px}
+    .comments-list::-webkit-scrollbar-track{background:transparent}
+    .comments-list::-webkit-scrollbar-thumb{background-color:var(--accent);border-radius:20px}
+    .comments-toggle{color:var(--accent);cursor:pointer;margin-top:8px;font-size:14px;user-select:none}
+    .comments-toggle:hover{text-decoration:underline}
+    .scroll-to-bottom{position:absolute;right:10px;bottom:10px;background:var(--accent);color:white;width:32px;height:32px;border-radius:50%;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,0.2);font-size:16px;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease;z-index:100;border:none;outline:none}
+    .scroll-to-bottom:hover{background:#1a6fe0;transform:translateY(-2px)}
+    .comment{display:flex;gap:8px;margin-bottom:12px}
+    .comment-avatar{width:28px;height:28px;border-radius:50%;object-fit:cover}
+    .comment-content{flex:1}
+    .comment-header{display:flex;gap:6px;align-items:center}
+    .comment-user{font-weight:600;font-size:14px}
+    .comment-time{color:var(--muted);font-size:12px}
+    .comment-text{margin-top:4px;font-size:14px}
+    .notification{position:fixed;top:80px;right:20px;background:#333;color:white;padding:16px 24px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15);z-index:1000;animation:slideIn 0.3s ease-out}
+    
+    /* 响应式设计样式 */
+    @media (max-width:700px){
+      header{padding:12px 16px;flex-wrap:wrap;justify-content:space-between}
+      nav{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+      nav a{padding:6px 8px;font-size:14px}
+      main{padding:12px 16px}
+      .grid{grid-template-columns:1fr;gap:16px}
+      .card img{height:180px}
+      .create{padding:12px}
+      .create h2{font-size:20px}
+      
+      /* 修复创建圈子表单在移动端的显示 */
+      #createCircleForm label{font-size:14px}
+      #createCircleForm input, #createCircleForm textarea{padding:10px}
+      
+      /* 修复图片选择区域在移动端的显示 */
+      .image-option{width:40px !important;height:40px !important}
+      
+      /* 修复评论区域在移动端的显示 */
+      .comments-container{padding:10px}
+      .comment{flex-wrap:wrap}
+      .comment-avatar{width:32px;height:32px}
+      
+      /* 修复通知在移动端的显示 */
+      .notification{top:120px;left:16px;right:16px;width:auto}
+    }
+    
+    @media (max-width:480px){
+      .grid{grid-template-columns:1fr}
+      .card img{height:160px}
+      
+      /* 进一步优化表单元素在小屏幕上的显示 */
+      #circleImage + div{font-size:12px}
+      
+      /* 修复编辑模态框在小屏幕上的显示 */
+      .edit-modal-content{width:95%;padding:16px}
+    }
+    @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+  </style>
 </head>
 <body>
   <header>
@@ -252,7 +353,7 @@
     </section>
   </main>
 
-  <footer style="text-align:center; font-size:16px">© 2025 Hobby Circle — Connect WIth Your Passions</footer>
+  <footer style="padding:14px 22px;color:var(--muted);text-align:center">© 2025 Hobby Circle — Connect with Your Passion</footer>
   <div class="edit-modal" id="editModal">
     <div class="edit-modal-content">
       <div class="edit-modal-header">
@@ -309,11 +410,517 @@
     </div>
   </div>
 
-  <footer>
-    <div class="contact-info">
-      <p>contact us: <a href="mailto:contact@hobbycircle.com">contact@hobbycircle.com</a></p>
-    </div>
-  </footer>
-  <script src="js/main.js"></script>
+  <script>
+    // Function to generate unique ID
+    function generateId() {
+      return 'circle_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+    }
+    
+    // Format number
+    function formatNumber(n) {
+      if(n >= 1000) return (n/1000).toFixed(n >= 10000 ? 0 : 1) + 'k'; 
+      return n + '';
+    }
+    
+    // Global variables to store currently selected image and edited circle
+    let currentImage = '';
+    let editedCircleCard = null;
+    
+    // Initialize image preview
+    document.getElementById('circleImage').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          const preview = document.getElementById('previewImage');
+          preview.src = event.target.result;
+          preview.style.display = 'block';
+          document.getElementById('placeholderText').style.display = 'none';
+          currentImage = event.target.result;
+          // Remove all selected states
+          document.querySelectorAll('.image-option').forEach(btn => btn.classList.remove('selected'));
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+    
+    // Select preset image
+    document.querySelectorAll('.image-option').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const imageUrl = this.getAttribute('data-image');
+        const preview = document.getElementById('previewImage');
+        preview.src = imageUrl;
+        preview.style.display = 'block';
+        document.getElementById('placeholderText').style.display = 'none';
+        currentImage = imageUrl;
+        
+        // Update selected state
+        document.querySelectorAll('.image-option').forEach(b => b.classList.remove('selected'));
+        this.classList.add('selected');
+        
+        // Clear file input
+        document.getElementById('circleImage').value = '';
+      });
+    });
+    
+    // Create circle functionality
+    function createCircle(event) {
+      event.preventDefault();
+      
+      // Get form data
+      const name = document.getElementById('circleName').value.trim();
+      const tagsInput = document.getElementById('circleTags').value.trim();
+      const description = document.getElementById('circleDescription').value.trim();
+      
+      // Validate input
+      if (!name || !tagsInput || !description || !currentImage) {
+        alert('Please fill in all required fields including selecting an image.');
+        return false;
+      }
+      
+      // Process tags
+      const tags = tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag);
+      const firstTag = tags[0] || 'General';
+      
+      // Generate unique ID
+      const circleId = generateId();
+      
+      // Create new circle card
+      const grid = document.querySelector('.grid');
+      const newCard = document.createElement('article');
+      newCard.className = 'card';
+      newCard.dataset.id = circleId;
+      newCard.style.cursor = 'pointer';
+      newCard.onclick = function() {
+        window.location.href = `circle-detail.html?circleId=${circleId}`;
+      };
+      newCard.innerHTML = `
+        <img src="${currentImage}" alt="${name}">
+        <button class="edit-button" onclick="event.stopPropagation(); openEditModal(this)">Edit</button>
+        <h3>${name}</h3>
+        <p>${description}</p>
+        <div class="meta">
+          <span class="badge">${firstTag}</span>
+          <span class="members"><span class="members-count">1</span> member</span>
+        </div>
+        <div class="actions">
+          <button class="icon btn-like" aria-pressed="false" data-likes="0" onclick="event.stopPropagation(); likePost(this)">❤ <span class="count">0</span></button>
+          <button class="icon btn-comment" data-comments="0" onclick="event.stopPropagation(); addComment(this)">💬 <span class="count">0</span></button>
+          <button class="join" data-members="1" onclick="event.stopPropagation(); joinCircle(this)">Join • <span class="members-count">1</span></button>
+        </div>
+      `;
+      
+      // Add new card to the top of the grid
+      grid.insertBefore(newCard, grid.firstChild);
+      
+      // Add event listeners to the new card
+      setupCardEventListeners(newCard);
+      
+      // Show success message
+      showSuccessMessage(`Circle "${name}" created successfully!`);
+      
+      // Reset form
+      document.getElementById('createCircleForm').reset();
+      document.getElementById('previewImage').src = '';
+      document.getElementById('previewImage').style.display = 'none';
+      document.getElementById('placeholderText').style.display = 'block';
+      currentImage = '';
+      document.querySelectorAll('.image-option').forEach(btn => btn.classList.remove('selected'));
+      
+      return false;
+    }
+    
+    // Global function - Like functionality
+      function likePost(element) {
+        const countEl = element.querySelector('.count');
+        let likes = parseInt(element.getAttribute('data-likes') || '0', 10);
+        const pressed = element.classList.toggle('liked');
+        if (pressed) {
+          likes += 1;
+          element.setAttribute('aria-pressed', 'true');
+        } else {
+          likes = Math.max(0, likes - 1);
+          element.setAttribute('aria-pressed', 'false');
+        }
+        element.setAttribute('data-likes', likes);
+        countEl.textContent = formatNumber(likes);
+      }
+      
+      // 全局函数 - 切换评论区域显示
+      function toggleCommentsSection(element) {
+        const card = element.closest('.card');
+        const commentsContainer = card.querySelector('.comments-container');
+        const commentsToggle = card.querySelector('.comments-toggle');
+        const countEl = element.querySelector('.count');
+        const commentCount = parseInt(element.getAttribute('data-comments') || '0', 10);
+        
+        // 确保评论切换按钮文本始终与实际评论数量一致
+        if (commentsContainer.style.display === 'none' || !commentsContainer.style.display) {
+          // 显示评论容器
+          commentsContainer.style.display = 'block';
+          commentsContainer.style.opacity = '0';
+          commentsContainer.style.transform = 'translateY(-10px)';
+          commentsContainer.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+          
+          // 触发重排后应用动画
+          setTimeout(() => {
+            commentsContainer.style.opacity = '1';
+            commentsContainer.style.transform = 'translateY(0)';
+          }, 10);
+          
+          commentsToggle.textContent = 'Hide Comments';
+        } else {
+          // 隐藏评论容器
+          commentsContainer.style.opacity = '0';
+          commentsContainer.style.transform = 'translateY(-10px)';
+          
+          setTimeout(() => {
+            commentsContainer.style.display = 'none';
+          }, 300);
+          
+          commentsToggle.textContent = `Show Comments (${commentCount})`;
+        }
+        
+        // Update comment count on toggle buttons to ensure displayed count matches button count
+        if (commentsToggle.textContent.includes('Show Comments')) {
+          commentsToggle.textContent = `Show Comments (${commentCount})`;
+        }
+      }
+      
+      // 滚动到底部功能
+      function scrollToBottom(button) {
+        const commentsList = button.closest('.comments-list');
+        
+        if (commentsList) {
+          commentsList.scrollTop = commentsList.scrollHeight;
+          
+          // 视觉反馈
+          button.style.transform = 'scale(0.9)';
+          setTimeout(() => {
+            button.style.transform = 'scale(1)';
+          }, 150);
+        }
+      }
+      
+      // 工具函数：转义HTML
+      function escapeHTML(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+      }
+      
+      // 全局函数 - 旧的评论功能（保留兼容）
+      function addComment(element) {
+        // 使用新的函数替代
+        const card = element.closest('.card');
+        const commentsContainer = card.querySelector('.comments-container');
+        
+        // 确保评论容器可见
+        if (commentsContainer.style.display === 'none' || !commentsContainer.style.display) {
+          toggleCommentsSection(element);
+        }
+        
+        // 聚焦到评论输入框
+        const input = commentsContainer.querySelector('input');
+        input.focus();
+      }
+      
+      // 全局函数 - 加入功能
+      function joinCircle(element) {
+        let members = parseInt(element.getAttribute('data-members') || '0', 10);
+        const joined = element.classList.toggle('joined');
+        if (joined) {
+          members += 1;
+          element.textContent = 'Joined • ' + formatNumber(members);
+          element.classList.add('btn-joined');
+          showNotification('Successfully joined the circle!');
+        } else {
+          members = Math.max(0, members - 1);
+          element.textContent = 'Join • ' + formatNumber(members);
+          element.classList.remove('btn-joined');
+          showNotification('You have left the circle.');
+        }
+        element.setAttribute('data-members', members);
+        const card = element.closest('.card');
+        if (card) {
+          card.querySelectorAll('.members-count').forEach(el => {
+            el.textContent = formatNumber(members);
+          });
+        }
+      }
+      
+      // 显示通知
+      function showNotification(message) {
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        notification.textContent = message;
+        notification.style.cssText = `
+          position: fixed;
+          top: 80px;
+          right: 20px;
+          background: #333;
+          color: white;
+          padding: 16px 24px;
+          border-radius: 8px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+          z-index: 1000;
+          animation: slideIn 0.3s ease-out;
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+          notification.style.opacity = '0';
+          notification.style.transition = 'opacity 0.5s';
+          setTimeout(() => {
+            document.body.removeChild(notification);
+          }, 500);
+        }, 3000);
+      }
+      
+      // Set up card event listeners
+      function setupCardEventListeners(card) {
+        // Add event for edit button (without preventing card click)
+        const editButton = card.querySelector('.edit-button');
+        if (editButton) {
+          editButton.addEventListener('click', function(event) {
+            event.stopPropagation();
+            openEditModal(this);
+          });
+        }
+      }
+    
+    // Show success message
+    function showSuccessMessage(message) {
+      const createSection = document.getElementById('create');
+      let successDiv = document.querySelector('.success-message');
+      
+      if (successDiv) {
+        successDiv.remove();
+      }
+      
+      successDiv = document.createElement('div');
+      successDiv.className = 'success-message';
+      successDiv.innerHTML = '✓ ' + message;
+      
+      createSection.insertBefore(successDiv, createSection.firstChild);
+      
+      // 3秒后移除消息
+      setTimeout(() => {
+        successDiv.style.opacity = '0';
+        successDiv.style.transition = 'opacity 0.5s';
+        setTimeout(() => successDiv.remove(), 500);
+      }, 3000);
+    }
+    
+    // 打开编辑模态框
+    function openEditModal(editButton) {
+      const card = editButton.closest('.card');
+      editedCircleCard = card;
+      
+      // 填充编辑表单
+      document.getElementById('editCircleId').value = card.dataset.id;
+      document.getElementById('editCircleName').value = card.querySelector('h3').textContent;
+      document.getElementById('editCircleDescription').value = card.querySelector('p').textContent;
+      
+      // Get tags
+      const badgeText = card.querySelector('.badge').textContent;
+      // Simplified handling - in a real app, you might need to get the full tag list from storage
+      document.getElementById('editCircleTags').value = badgeText;
+      
+      // Set image
+      const imageSrc = card.querySelector('img').src;
+      document.getElementById('editPreviewImage').src = imageSrc;
+      
+      // Show modal
+      document.getElementById('editModal').style.display = 'flex';
+    }
+    
+    // Close edit modal
+    function closeEditModal() {
+      document.getElementById('editModal').style.display = 'none';
+      editedCircleCard = null;
+    }
+    
+    // Select edit image
+    function selectEditImage(imageUrl) {
+      document.getElementById('editPreviewImage').src = imageUrl;
+      document.getElementById('editCircleImage').value = '';
+    }
+    
+    // Edit image upload preview
+    document.getElementById('editCircleImage').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          document.getElementById('editPreviewImage').src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+    
+    // Update circle
+    function updateCircle(event) {
+      event.preventDefault();
+      
+      if (!editedCircleCard) return false;
+      
+      // Get form data
+      const name = document.getElementById('editCircleName').value.trim();
+      const tagsInput = document.getElementById('editCircleTags').value.trim();
+      const description = document.getElementById('editCircleDescription').value.trim();
+      const imageSrc = document.getElementById('editPreviewImage').src;
+      
+      // Validate input
+      if (!name || !tagsInput || !description) {
+        alert('Please fill in all required fields.');
+        return false;
+      }
+      
+      // Process tags
+      const tags = tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag);
+      const firstTag = tags[0] || 'General';
+      
+      // Update card
+      editedCircleCard.querySelector('h3').textContent = name;
+      editedCircleCard.querySelector('p').textContent = description;
+      editedCircleCard.querySelector('.badge').textContent = firstTag;
+      editedCircleCard.querySelector('img').src = imageSrc;
+      editedCircleCard.querySelector('img').alt = name;
+      
+      // Close modal
+      closeEditModal();
+      
+      // Show success message
+      showSuccessMessage(`Circle "${name}" updated successfully!`);
+      
+      return false;
+    }
+    
+    // Comment like functionality
+    function likeComment(element) {
+      const countEl = element.querySelector('.like-count');
+      let likes = parseInt(element.getAttribute('data-likes') || '0', 10);
+      const liked = element.classList.toggle('liked');
+      
+      if (liked) {
+        likes += 1;
+        element.style.color = 'red';
+      } else {
+        likes = Math.max(0, likes - 1);
+        element.style.color = '';
+      }
+      
+      element.setAttribute('data-likes', likes);
+      countEl.textContent = likes;
+    }
+    
+    // Update newly added comments and add like functionality
+    function addNewComment(button) {
+      const input = button.previousElementSibling;
+      const commentText = input.value.trim();
+      
+      if (!commentText) {
+        showNotification('Please enter a comment!');
+        return;
+      }
+      
+      const card = button.closest('.card');
+      const commentsList = card.querySelector('.comments-list');
+      const commentButton = card.querySelector('.btn-comment');
+      const countEl = commentButton.querySelector('.count');
+      let commentCount = parseInt(commentButton.getAttribute('data-comments') || '0', 10);
+      
+      // Create new comment (without delete button)
+      const newComment = document.createElement('div');
+      newComment.className = 'comment';
+      newComment.innerHTML = `
+        <img src="images/user10.jpg" alt="You" class="comment-avatar">
+        <div class="comment-content">
+          <div class="comment-header">
+            <span class="comment-user">You</span>
+            <span class="comment-time">Just now</span>
+          </div>
+          <div class="comment-text">${escapeHTML(commentText)}</div>
+          <div class="comment-actions">
+            <span class="comment-action like-action" onclick="likeComment(this)" data-likes="0">❤ <span class="like-count">0</span></span>
+          </div>
+        </div>
+      `;
+      
+      // Add new comment to the top of the list
+      commentsList.insertBefore(newComment, commentsList.firstChild);
+      
+      // 更新评论数
+      commentCount++;
+      commentButton.setAttribute('data-comments', commentCount);
+      countEl.textContent = commentCount;
+      
+      // Update display text
+      const commentsToggle = card.querySelector('.comments-toggle');
+      if (commentsToggle.textContent === 'Hide Comments') {
+        commentsToggle.textContent = 'Hide Comments';
+      } else {
+        commentsToggle.textContent = `Show Comments (${commentCount})`;
+      }
+      
+      // Clear input field
+      input.value = '';
+      
+      // Show notification
+      showNotification('Comment added successfully!');
+    }
+    
+    // 移除重复的likePost函数，保留上面的全局实现
+    
+    // Toggle comment display/hide
+    function toggleComments(element) {
+      const commentsContainer = element.nextElementSibling;
+      const commentCount = element.textContent.match(/\d+/);
+      
+      if (commentsContainer.style.display === 'none' || !commentsContainer.style.display) {
+        commentsContainer.style.display = 'block';
+        element.textContent = 'Hide Comments';
+      } else {
+        commentsContainer.style.display = 'none';
+        element.textContent = `Show Comments (${commentCount ? commentCount[0] : '0'})`;
+      }
+    }
+    
+    // Initialize event listeners for all existing cards
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.card').forEach(card => {
+        setupCardEventListeners(card);
+      });
+      
+      // Add default styles and events for all comments (ensure no delete button is included)
+      document.querySelectorAll('.comment').forEach(comment => {
+        if (!comment.querySelector('.comment-actions')) {
+          const content = comment.querySelector('.comment-content');
+          const actions = document.createElement('div');
+          actions.className = 'comment-actions';
+          actions.innerHTML = '<span class="comment-action like-action" onclick="likeComment(this)" data-likes="0">❤ <span class="like-count">0</span></span>';
+          content.appendChild(actions);
+        }
+        
+        // Remove any existing delete buttons
+        const deleteButtons = comment.querySelectorAll('.delete-action, .comment-delete, [onclick*="deleteComment"]');
+        deleteButtons.forEach(button => button.remove());
+      });
+      
+      // Ensure all comment toggle buttons have the correct onclick event
+      document.querySelectorAll('.comments-toggle').forEach(toggle => {
+        toggle.setAttribute('onclick', 'toggleComments(this)');
+      });
+      
+      // Ensure all like buttons have the correct onclick event with event.stopPropagation()
+document.querySelectorAll('.btn-like, .post-action').forEach(likeBtn => {
+  if (likeBtn.querySelector('span')) {
+    likeBtn.setAttribute('onclick', 'event.stopPropagation(); likePost(this)');
+  }
+});
+    });
+  </script>
 </body>
 </html>

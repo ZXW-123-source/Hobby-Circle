@@ -4,7 +4,90 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Hobby Circle — Home</title>
-  <link rel="stylesheet" href="css/main.css">
+  <style>
+  :root{--accent:#2b8cff;--bg:#f7f9fc;--card:#ffffff;--muted:#6b7280;--hero-position:center center;--hero-overlay:rgba(0,0,0,0.28);--hero-intro-left:28px;--hero-intro-bottom:28px}
+  /* 禁用平滑滚动，防止自动下滑 */
+  html{
+    scroll-behavior: auto;
+  }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,Segoe UI,Helvetica,Arial;background:var(--bg);color:#111}
+    header{background:linear-gradient(90deg,#fff 0%,rgba(255,255,255,0.8) 100%);padding:18px 28px;display:flex;align-items:center;gap:18px}
+    .logo{display:flex;align-items:center;gap:10px}
+    .logo img{height:48px;width:48px;object-fit:cover;border-radius:8px}
+    nav{margin-left:auto;display:flex;gap:14px;align-items:center}
+  nav a{color:var(--muted);text-decoration:none;font-weight:700;padding:8px 10px;border-radius:8px}
+  nav a:hover{color:var(--accent);background:rgba(43,140,255,0.06)}
+  nav a.active{color:#0b3a8a;background:rgba(43,140,255,0.12)}
+  /* default background (fallback) */
+  .hero{position:relative;display:flex;gap:28px;padding:40px 28px;align-items:center;height:100vh;min-height:600px;background-image:url('images/hero.jpg');background-size:cover !important;background-position:var(--hero-position) !important;background-repeat:no-repeat !important;color:var(--card);overflow:hidden}
+  /* responsive WebP backgrounds - create these files for best performance */
+  @media (min-width:1100px){
+    .hero{background-image: url('images/hero-large.webp'), url('images/hero.jpg')}
+  }
+  @media (min-width:701px) and (max-width:1099px){
+    /* prefer medium WebP but fall back to hero.jpg if missing */
+    .hero{background-image: url('images/hero-medium.webp'), url('images/hero.jpg')}
+  }
+  @media (max-width:700px){
+    /* prefer small WebP but fall back to hero.jpg if missing */
+    .hero{background-image: url('images/hero-small.webp'), url('images/hero.jpg'); background-position: center top}
+  }
+  /* lighter overlay so top doesn't appear too gray */
+  .hero::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.06),var(--hero-overlay));z-index:0;pointer-events:none}
+  .hero .hero-image{position:relative;z-index:1}
+  .hero .intro{position:absolute;left:var(--hero-intro-left);bottom:var(--hero-intro-bottom);z-index:1;max-width:640px;background:rgba(0,0,0,0.32);padding:18px;border-radius:12px;width:clamp(260px,40%,640px);color:#fff;transform:translateY(6px);opacity:0;transition:transform .6s var(--ease, cubic-bezier(.2,.8,.2,1)),opacity .6s}
+  .hero.loaded .intro{transform:none;opacity:1}
+  .hero h1{font-size:28px;margin:0 0 10px}
+  .hero p{margin:0 0 18px;color:var(--muted)}
+  /* ensure intro paragraph stays white on the semi-transparent block */
+  .hero .intro p{color:#fff}
+    .cta{background:var(--accent);color:#fff;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:700}
+  .hero .hero-image{flex:1;text-align:right}
+  /* 原内联 <img> 已移除；如果需要保留装饰性元素，可在此添加样式 */
+  .section{padding:18px 28px 48px}
+  /* cards: subtle hover + reveal on scroll */
+  .card{transition:transform .28s var(--ease, cubic-bezier(.2,.8,.2,1)),box-shadow .28s;transform:translateY(12px);opacity:0}
+  .card.inview{transform:none;opacity:1}
+  .card:hover{transform:translateY(0) scale(1.02);box-shadow:0 12px 30px rgba(16,24,40,0.12)}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px;margin-top:14px}
+    .card{background:var(--card);border-radius:12px;padding:12px;box-shadow:0 6px 18px rgba(16,24,40,0.04);overflow:hidden}
+  .card .meta{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:nowrap}
+  .card .badge{background:#eef4ff;color:var(--accent);padding:4px 8px;border-radius:999px;font-size:12px;font-weight:700}
+  .card .members{margin-left:auto;color:var(--muted);font-size:12px}
+  .card .actions{display:flex;gap:8px;align-items:center;margin-top:14px}
+  .card .actions button{background:none;border:1px solid transparent;padding:6px 8px;border-radius:8px;cursor:pointer;font-weight:700}
+  .card .actions button.icon{display:inline-flex;align-items:center;gap:6px;border:1px solid #eef4ff;background:#fff}
+  .card .actions button.icon.liked{color:#d23f3f;background:rgba(210,63,63,0.06);border-color:rgba(210,63,63,0.08)}
+  .card .actions .join{margin-left:auto;background:var(--accent);color:#fff;padding:6px 10px;border-radius:8px}
+  .meta .members-count{font-weight:700}
+    .card img{width:100%;height:140px;object-fit:cover;border-radius:8px}
+    .card h3{margin:10px 0 6px;font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .card p{margin:0;color:var(--muted);font-size:13px}
+    footer{padding:18px 28px;color:var(--muted);font-size:13px;border-top:1px solid #e6eef9}
+  @media (max-width:700px){
+    :root{--hero-position:center top;--hero-intro-left:16px;--hero-intro-bottom:20px}
+    .hero{flex-direction:column;padding:28px 16px;min-height:40vh;max-height:60vh}
+    .hero .hero-image{text-align:left}
+    /* 修复导航栏在小屏幕上的显示 */
+    nav{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px}
+    nav a{padding:6px 8px;font-size:14px}
+    /* 优化header在小屏幕上的布局 */
+    header{padding:12px 16px;flex-wrap:wrap;justify-content:space-between}
+    /* 修复网格布局在小屏幕上的显示 */
+    .grid{grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+    /* 确保在所有小屏幕上.intro都在文档流中 */
+    .hero .intro{position:static !important;width:auto !important;margin-top:12px !important}
+    /* 调整section内边距 */
+    .section{padding:12px 16px 32px}
+    /* 优化卡片图片高度 */
+    .card img{height:120px}
+  }
+  /* respect reduced motion */
+  @media (prefers-reduced-motion: reduce){
+    .hero .intro,.card{transition:none!important}
+  }
+  </style>
 </head>
 <body>
   <header>
@@ -99,12 +182,94 @@
     </section>
   </main>
 
-  <footer style="text-align:center; font-size:16px">© 2025 Hobby Circle — Connect WIth Your Passions</footer>
   <footer>
-    <div class="contact-info">
-      <p>contact us: <a href="mailto:contact@hobbycircle.com">contact@hobbycircle.com</a></p>
-    </div>
+    © 2025 Obby Circle — Demo static homepage. If images don't appear, replace the filenames in this file with those in your `images/` folder.
   </footer>
-  <script src="js/main.js"></script>
+  <script>
+    (function(){
+      // 添加卡片点击事件处理
+      document.addEventListener('DOMContentLoaded', function() {
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+          // 设置卡片光标为指针
+          card.style.cursor = 'pointer';
+          
+          // 添加点击事件，跳转到圈子详情页
+          card.addEventListener('click', function() {
+            const actionsDiv = this.querySelector('.actions[data-id]');
+            if (actionsDiv) {
+              const circleId = actionsDiv.getAttribute('data-id');
+              window.location.href = `circle-detail.html?circleId=${circleId}`;
+            }
+          });
+          
+          // 为卡片内的按钮添加事件，阻止冒泡
+          const buttons = card.querySelectorAll('button');
+          buttons.forEach(button => {
+            button.addEventListener('click', function(event) {
+              event.stopPropagation();
+            });
+          });
+        });
+      });
+      const hero = document.querySelector('.hero');
+      const nextSection = document.querySelector('.section');
+      // run after load to trigger intro animation
+      document.addEventListener('DOMContentLoaded', ()=>{
+        requestAnimationFrame(()=> hero && hero.classList.add('loaded'));
+        // CTA now links directly to circles page
+        // Parallax removed: avoid changing backgroundPosition which can clip or shift the image
+        // Reveal cards with IntersectionObserver
+        const cards = document.querySelectorAll('.card');
+        if('IntersectionObserver' in window){
+          const io = new IntersectionObserver((entries, obs)=>{
+            entries.forEach(entry=>{
+              if(entry.isIntersecting){ entry.target.classList.add('inview'); obs.unobserve(entry.target); }
+            });
+          }, {threshold: 0.12});
+          cards.forEach(c => io.observe(c));
+        } else {
+          cards.forEach(c => c.classList.add('inview'));
+        }
+
+        // Simple interactive handlers: like, comment, join
+        function formatNumber(n){
+          if(n>=1000) return (n/1000).toFixed(n>=10000?0:1)+'k';
+          return n+'';
+        }
+        document.querySelectorAll('.btn-like').forEach(btn=>{
+          btn.addEventListener('click', ()=>{
+            const countEl = btn.querySelector('.count');
+            let likes = parseInt(btn.getAttribute('data-likes')||'0',10);
+            const pressed = btn.classList.toggle('liked');
+            if(pressed){ likes += 1; btn.setAttribute('aria-pressed','true'); }
+            else { likes = Math.max(0, likes-1); btn.setAttribute('aria-pressed','false'); }
+            btn.setAttribute('data-likes', likes);
+            countEl.textContent = formatNumber(likes);
+          });
+        });
+        document.querySelectorAll('.btn-comment').forEach(btn=>{
+          btn.addEventListener('click', ()=>{
+            const countEl = btn.querySelector('.count');
+            let comments = parseInt(btn.getAttribute('data-comments')||'0',10);
+            const text = prompt('Add a comment (demo):');
+            if(text){ comments += 1; btn.setAttribute('data-comments', comments); countEl.textContent = comments; }
+          });
+        });
+        document.querySelectorAll('.join').forEach(btn=>{
+          btn.addEventListener('click', ()=>{
+            let members = parseInt(btn.getAttribute('data-members')||'0',10);
+            const joined = btn.classList.toggle('joined');
+            if(joined){ members += 1; btn.textContent = 'Joined • '+formatNumber(members); btn.style.background='#6fb0ff'; }
+            else { members = Math.max(0,members-1); btn.textContent = 'Join • '+formatNumber(members); btn.style.background='var(--accent)'; }
+            btn.setAttribute('data-members', members);
+            // update any members-count elements within the card
+            const card = btn.closest('.card');
+            if(card){ card.querySelectorAll('.members-count').forEach(el=>{ el.textContent = formatNumber(members); }); }
+          });
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
